@@ -1,13 +1,13 @@
-/****************************************************************
- *                Stepper Motor Tester v.1.2.0                  *
- *                       For AtMega328p                         *
- * Stepper Motor - 1: MITSUMI M42SP-7                           *
- *   Step Angle: 7.5 degree                                     *
- *                                                              *
- * Driver : A4988                                               *
- *   Set enable: LOW - On, HIGH - Off                           *
- *   Set direction : HIGH - ClockWise, LOW - CounterClockWise   *
- ****************************************************************/
+/**********************************************************************
+ *                      Stepper Motor Tester v.1.2.0                  *
+ *                            For AtMega328p                          *
+ *       Stepper Motor - 1: MITSUMI M42SP-7                           *
+ *         Step Angle: 7.5 degree                                     *
+ *                                                                    *
+ *       Driver : A4988                                               *
+ *         Set enable: LOW - On, HIGH - Off                           *
+ *         Set direction : HIGH - ClockWise, LOW - CounterClockWise   *
+ **********************************************************************/
 
 #define F_CPU 16000000L
 #include <Arduino.h>
@@ -94,7 +94,7 @@ void loop() {
       }
 
       if (encoder.left()) {
-        pMotor->updatePulse(10);
+        pMotor->updatePulse(-10);
         velocityScreen(pDisplay, pMotor);
         screenState = false;
       }

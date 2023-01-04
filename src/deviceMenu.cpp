@@ -14,7 +14,7 @@ const uint8_t sizeArray = sizeof(sDriver) / sizeof(char*);
 
 void selectMenu(Adafruit_SSD1306 *display, uint8_t item, bool buttonState) {
   display->clearDisplay();
-  /* Upper */
+  /* Top */
   if (item != 0) {
       display->setCursor(calcCenter(strlen(sDriver[item - 1])),  Y - CHARACTER_HEIGHT);
       display->print(sDriver[item - 1]);
@@ -111,11 +111,15 @@ void mainScreen(Adafruit_SSD1306 *display, Motor *motor, uint8_t item) {
 void velocityScreen(Adafruit_SSD1306 *display, Motor *motor) {
   const char *stepsPerSec = "Steps per second";
   display->clearDisplay();
-  display->drawRect(0, 0, 128, 32, WHITE);
-  display->setCursor(calcCenter(strlen(stepsPerSec)), 0);
+  //display->drawRect(0, 0, 128, 32, WHITE);
+  display->setCursor(0, 0);
   display->print(stepsPerSec);
   display->setCursor(50, 10);
   display->print(1000 / (TIMER_RESOLUTION * (motor->getPulse() + 1)) * 500);
+  display->setCursor(0,20);
+  display->print("Pulse: ");
+  display->setCursor(49, 20);
+  display->print(motor->getPulse());
 
   display->display();
 }
