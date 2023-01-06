@@ -88,13 +88,13 @@ void loop() {
       term_sw_2.tick();
       
       if (encoder.right()) {
-        pMotor->updatePulse(10);
+        pMotor->updatePulse(100);
         velocityScreen(pDisplay, pMotor);
         screenState = false;
       }
 
       if (encoder.left()) {
-        pMotor->updatePulse(-10);
+        pMotor->updatePulse(-100);
         velocityScreen(pDisplay, pMotor);
         screenState = false;
       }

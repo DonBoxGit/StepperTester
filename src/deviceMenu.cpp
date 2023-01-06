@@ -115,7 +115,8 @@ void velocityScreen(Adafruit_SSD1306 *display, Motor *motor) {
   display->setCursor(0, 0);
   display->print(stepsPerSec);
   display->setCursor(50, 10);
-  display->print(1000 / (TIMER_RESOLUTION * (motor->getPulse() + 1)) * 500);
+  /* Computing and print quantity of steps per second */
+  display->print(1 / (TIMER_RESOLUTION * motor->getPulse() * 2));
   display->setCursor(0,20);
   display->print("Pulse: ");
   display->setCursor(49, 20);
