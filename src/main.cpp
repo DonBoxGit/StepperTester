@@ -33,29 +33,29 @@ EncButton<EB_TICK, BUTTON_RESET_PIN> reset_btn(INPUT_PULLUP);
 EncButton<EB_TICK, TERM_SW_PIN_1> term_sw_1(INPUT_PULLUP);
 EncButton<EB_TICK, TERM_SW_PIN_2> term_sw_2(INPUT_PULLUP);
 
-void isr() { 
-    encoder.tickISR();
+/* External interrupt function for encoder */
+void isr() { encoder.tickISR(); }
+
+/* Internal interrupt for motor stepper driver control */
+ISR(TIMER1_COMPA_vect) {
+    pMotor->refreshPulse();
+    far::digitalWrite(STEP_PIN, !far::digitalRead(STEP_PIN));
+    if(far::digitalRead(STEP_PIN)) pMotor->incSteps();
 }
 
 void setup() {
   Serial.begin(9600);
   Motor::init();
-  /* Initialization of Encoder and External Interrupt */
+  /* Initialization of encoder and external interrupts */
   encoder.setEncType(0);  // Full step type encoder
   attachInterrupt(0, isr, CHANGE);
   attachInterrupt(1, isr, CHANGE);
 
-  // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
+  /* SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally */
   pDisplay->begin(SSD1306_SWITCHCAPVCC, DISPLAY_I2C_ADDR);
   pDisplay->setTextSize(1);
   pDisplay->setTextColor(WHITE);
   selectMenu(pDisplay, 0, false);
-}
-
-ISR(TIMER1_COMPA_vect) {
-    pMotor->refreshPulse();
-    far::digitalWrite(STEP_PIN, !far::digitalRead(STEP_PIN));
-    if(far::digitalRead(STEP_PIN)) pMotor->incSteps();
 }
 
 void loop() {
