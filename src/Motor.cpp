@@ -1,5 +1,4 @@
 #include "Motor.h"
-#include <Arduino.h>
 
 Motor::Motor (const uint8_t stp,
               const uint8_t dir,
@@ -9,7 +8,7 @@ Motor::Motor (const uint8_t stp,
     far::pinMode(step_pin,   OUTPUT);
     far::pinMode(dir_pin,    OUTPUT);
     far::pinMode(enable_pin, OUTPUT);
-    setEnable(OFF);
+    setEnable(EnableState::OFF);
 }
 
 Motor::~Motor() {}
@@ -26,14 +25,14 @@ void Motor::init() {
 }
 
 void Motor::run() {
-    motorState = MotorState::WORK;
+    motorState = static_cast<bool>(MotorState::WORK);
     if(!((TIMSK1 >> OCIE1A) & 1)) {
         TIMSK1  |= (1 << OCIE1A);
     }
 }
 
 void Motor::stop() {
-    motorState = MotorState::STOP;
+    motorState = static_cast<bool>(MotorState::STOP);
     if((TIMSK1 >> OCIE1A) & 1) {
         TIMSK1 &= ~(1 << OCIE1A);
         TCNT1 = 0x00;
@@ -42,45 +41,45 @@ void Motor::stop() {
 }
 
 void Motor::execute(MotorState state) {
-    state ? run() : stop();
+    static_cast<bool>(state) ? run() : stop();
 }
 
 void Motor::setEnable(EnableState state) {
     switch(state) {
-        case ON:
+        case EnableState::ON:
             if(far::digitalRead(enable_pin)) {
                 TIMSK1 &= ~(1 << OCIE1A);
                 TCNT1 = 0x00;
-                far::digitalWrite(enable_pin, enableState = state);
+                far::digitalWrite(enable_pin, enableState = static_cast<bool>(state));
                 _delay_us(T1_DURATION);
                 TIMSK1 |= (1 << OCIE1A);
             }
             break;
 
-        case OFF:
+        case EnableState::OFF:
             if(!far::digitalRead(enable_pin))
-                far::digitalWrite(enable_pin, enableState = state);
+                far::digitalWrite(enable_pin, enableState = static_cast<bool>(state));
             break;
     }
 }
 
 void Motor::setDirection(Direction state) {
     switch(state) {
-        case FORWARD:
+        case Direction::FORWARD:
             if(!far::digitalRead(dir_pin)) {
                 TIMSK1 &= ~(1 << OCIE1A);
                 TCNT1 = 0x00;
-                far::digitalWrite(dir_pin, dirState = state);
+                far::digitalWrite(dir_pin, dirState = static_cast<bool>(state));
                 _delay_us(T2_DURATION);
                 TIMSK1 |= (1 << OCIE1A);
             }
             break;
             
-        case REVERSE:
+        case Direction::REVERSE:
             if(far::digitalRead(dir_pin)) {
                 TIMSK1 &= ~(1 << OCIE1A);
                 TCNT1 = 0x00;
-                far::digitalWrite(dir_pin, dirState = state);
+                far::digitalWrite(dir_pin, dirState = static_cast<bool>(state));
                 _delay_us(T2_DURATION);
                 TIMSK1 |= (1 << OCIE1A);
             }

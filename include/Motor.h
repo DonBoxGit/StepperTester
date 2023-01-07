@@ -7,8 +7,8 @@
 #include "config.h"
 
 enum class EnableState : bool { ON = false, OFF = true };
-enum Direction   : bool { REVERSE = false, FORWARD = true };
-enum MotorState  : bool { STOP = false, WORK = true };
+enum class Direction   : bool { REVERSE = false, FORWARD = true };
+enum class MotorState  : bool { STOP = false, WORK = true };
 
 class Motor {
     public:
