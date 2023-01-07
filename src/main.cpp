@@ -10,7 +10,7 @@
  **********************************************************************/
 
 #define F_CPU 16000000L
-#include <Arduino.h>
+
 #include "config.h"
 #include "Motor.h"
 #include "fastArduino.h"
@@ -25,10 +25,12 @@ Motor *pMotor = new Motor(STEP_PIN, DIR_PIN, ENBL_PIN);
 
 /* Encoder initialization */
 EncButton<EB_TICK, DT, SLK, SW> encoder;
+
 /* Initialization buttons of control */
 EncButton<EB_TICK, BUTTON_RIGHT_PIN> right_btn(INPUT_PULLUP);
 EncButton<EB_TICK, BUTTON_LEFT_PIN>  left_btn (INPUT_PULLUP);
 EncButton<EB_TICK, BUTTON_RESET_PIN> reset_btn(INPUT_PULLUP);
+
 /* Initialization of terminate switches */
 EncButton<EB_TICK, TERM_SW_PIN_1> term_sw_1(INPUT_PULLUP);
 EncButton<EB_TICK, TERM_SW_PIN_2> term_sw_2(INPUT_PULLUP);
@@ -74,7 +76,7 @@ void loop() {
 
   if (encoder.press()) {
     selectMenu(pDisplay, pos, true);
-    _delay_ms(500);
+    _delay_ms(400);
     mainScreen(pDisplay, pMotor, pos);
     bool screenState = false;
     Timer updateScreenRate(50);
