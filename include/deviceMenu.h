@@ -7,11 +7,12 @@
 #include <Adafruit_SSD1306.h>
 #include "Motor.h"
 #include "timer_blink.h"
-//#include <Arduino.h>
 
 extern Blink blinkMotorStatus;
 #define CHARACTER_WIDTH 7
 #define CHARACTER_HEIGHT 11
+
+const float TIMER_RESOLUTION = 1.0F / (F_CPU / 256); // 256 - prescaller
 
 /* Motor status rectangle property */
 #define motorStatusCoordX 1
@@ -32,6 +33,4 @@ uint8_t calcCenter(uint8_t sLength);
 void mainScreen(Adafruit_SSD1306 *display, Motor *motor, uint8_t item);
 void velocityScreen(Adafruit_SSD1306 *display, Motor *motor);
 
-const float TIMER_RESOLUTION = 1.0F / (F_CPU / 256); // 256 - prescaller, 0.000016
-// 1000 / ((TIMER_RESOLUTION * (motor.getPulse() + 1)) * 500) // steps per second
 #endif /* _DEVICE_MENU_H_*/
