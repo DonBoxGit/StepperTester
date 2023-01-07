@@ -80,9 +80,12 @@ void loop() {
     mainScreen(pDisplay, pMotor, pos);
     bool screenState = false;
     Timer updateScreenRate(50);
+    Timer delayVelocityScreen(1000);
 
     while (true) {
-      encoder.tick();
+      if (!encoder.tick() && delayVelocityScreen.ready()) {
+        screenState = true;
+      }
       right_btn.tick();
       left_btn.tick();
       reset_btn.tick();
@@ -93,12 +96,14 @@ void loop() {
         pMotor->updatePulse(100);
         velocityScreen(pDisplay, pMotor);
         screenState = false;
+        delayVelocityScreen.resetCount();
       }
 
       if (encoder.left()) {
         pMotor->updatePulse(-100);
         velocityScreen(pDisplay, pMotor);
         screenState = false;
+        delayVelocityScreen.resetCount();
       }
 
       if (right_btn.press()) {
