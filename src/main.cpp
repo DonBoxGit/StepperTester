@@ -100,26 +100,26 @@ void loop() {
       }
 
       if (right_btn.press()) {
-          pMotor->setDirection(Motor::FORWARD);
-          pMotor->setEnable(Motor::ON);
-          pMotor->execute(Motor::WORK);
+          pMotor->setDirection(Direction::FORWARD);
+          pMotor->setEnable(EnableState::ON);
+          pMotor->execute(MotorState::WORK);
           screenState = true;
       } else if (right_btn.release()) {
-          pMotor->execute(Motor::STOP);
-          pMotor->setEnable(Motor::OFF);
+          pMotor->execute(MotorState::STOP);
+          pMotor->setEnable(EnableState::OFF);
           screenState = false;
           blinkMotorStatus.resetStatus();
           mainScreen(pDisplay, pMotor, pos);
       }
 
       if (left_btn.press()) {
-          pMotor->setDirection(Motor::REVERSE);
-          pMotor->setEnable(Motor::ON);
-          pMotor->execute(Motor::WORK);
+          pMotor->setDirection(Direction::REVERSE);
+          pMotor->setEnable(EnableState::ON);
+          pMotor->execute(MotorState::WORK);
           screenState = true;
       } else if (left_btn.release()) {
-          pMotor->execute(Motor::STOP);
-          pMotor->setEnable(Motor::OFF);
+          pMotor->execute(MotorState::STOP);
+          pMotor->setEnable(EnableState::OFF);
           screenState = false;
           blinkMotorStatus.resetStatus();
           mainScreen(pDisplay, pMotor, pos);
@@ -131,7 +131,7 @@ void loop() {
       }
       
       if (term_sw_1.press() || term_sw_2.press()) {
-        pMotor->execute(Motor::STOP);
+        pMotor->execute(MotorState::STOP);
         screenState  = true;
       } else if (term_sw_1.release() || term_sw_2.release()) {
         screenState = false;

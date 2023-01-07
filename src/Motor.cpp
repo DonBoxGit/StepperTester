@@ -41,11 +41,11 @@ void Motor::stop() {
     }
 }
 
-void Motor::execute(bool state) {
+void Motor::execute(MotorState state) {
     state ? run() : stop();
 }
 
-void Motor::setEnable(bool state) {
+void Motor::setEnable(EnableState state) {
     switch(state) {
         case ON:
             if(far::digitalRead(enable_pin)) {
@@ -64,7 +64,7 @@ void Motor::setEnable(bool state) {
     }
 }
 
-void Motor::setDirection(bool state) {
+void Motor::setDirection(Direction state) {
     switch(state) {
         case FORWARD:
             if(!far::digitalRead(dir_pin)) {

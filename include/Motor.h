@@ -6,11 +6,13 @@
 #include "fastArduino.h"
 #include "config.h"
 
+enum EnableState : bool { ON = false, OFF = true };
+enum Direction   : bool { REVERSE = false, FORWARD = true };
+enum MotorState  : bool { STOP = false, WORK = true };
+
 class Motor {
     public:
-        enum EnableState : bool { ON = false, OFF = true };
-        enum Direction   : bool { REVERSE = false, FORWARD = true };
-        enum MotorState  : bool { STOP = false, WORK = true };
+        
 
         Motor(const uint8_t stp,
               const uint8_t dir,
@@ -18,12 +20,12 @@ class Motor {
 
         ~Motor();
         static void init(void);
-        void setEnable(bool);
-        void setDirection(bool);
+        void setEnable(EnableState);
+        void setDirection(Direction);
         bool getEnable(void);
         bool getMotorState(void);
         bool getDirection(void);
-        void execute(bool);
+        void execute(MotorState);
         void incSteps(void);
         void resetSteps(void);
         uint16_t getSteps(void);
