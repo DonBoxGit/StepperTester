@@ -6,7 +6,7 @@
 #include "fastArduino.h"
 #include "config.h"
 
-enum EnableState : bool { ON = false, OFF = true };
+enum class EnableState : bool { ON = false, OFF = true };
 enum Direction   : bool { REVERSE = false, FORWARD = true };
 enum MotorState  : bool { STOP = false, WORK = true };
 
