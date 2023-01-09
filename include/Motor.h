@@ -12,8 +12,6 @@ enum class MotorState  : bool { STOP = false, WORK = true };
 
 class Motor {
     public:
-        
-
         Motor(const uint8_t stp,
               const uint8_t dir,
               const uint8_t enb);
