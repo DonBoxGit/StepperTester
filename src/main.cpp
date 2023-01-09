@@ -79,19 +79,20 @@ void loop() {
     _delay_ms(400);
     mainScreen(pDisplay, pMotor, pos);
     bool screenState = false;
+    bool flagScreen = true;
     Timer updateScreenRate(50);
     Timer delayVelocityScreen(1000);
 
     while (true) {
-      if (!encoder.tick() && delayVelocityScreen.ready()) {
-        screenState = true;
-      }
       right_btn.tick();
       left_btn.tick();
       reset_btn.tick();
       term_sw_1.tick();
       term_sw_2.tick();
-      
+      if (!encoder.tick() && delayVelocityScreen.ready()) {  // <-!
+        screenState = true;
+      }
+
       if (encoder.right()) {
         pMotor->updatePulse(100);
         velocityScreen(pDisplay, pMotor);
@@ -105,7 +106,6 @@ void loop() {
         screenState = false;
         delayVelocityScreen.resetCount();
       }
-
       if (right_btn.press()) {
           pMotor->setDirection(Direction::FORWARD);
           pMotor->setEnable(EnableState::ON);
@@ -145,7 +145,8 @@ void loop() {
         mainScreen(pDisplay, pMotor, pos);
       }
       
-      if (screenState && updateScreenRate.ready()) mainScreen(pDisplay, pMotor, pos);
+      if (screenState && updateScreenRate.ready()) 
+        mainScreen(pDisplay, pMotor, pos);
     }
   }
 }
