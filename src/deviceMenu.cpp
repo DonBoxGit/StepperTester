@@ -36,7 +36,6 @@ void selectMenu(Adafruit_SSD1306 *display, uint8_t item, bool buttonState) {
         display->print(sDriver[item]);
         display->setTextColor(WHITE);
     }
-
   /* Bottom */ 
   if (item != sizeArray - 1) {
     display->setCursor(calcCenter(strlen(sDriver[item + 1])),  Y + CHARACTER_HEIGHT);
