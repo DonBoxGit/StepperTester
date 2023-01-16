@@ -126,4 +126,4 @@ void velocityScreen(Adafruit_SSD1306 *display, Motor *motor) {
 
 uint8_t calcCenter(uint8_t sLength) {
   return (DISPLAY_WIDTH - CHARACTER_WIDTH * sLength) / 2;
-  }
+}
