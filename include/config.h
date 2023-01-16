@@ -34,6 +34,6 @@
 #define T1_DURATION         10    // Duration pause time after Anable ON (min. 5 microSeconds)
 #define T2_DURATION         10    // Duration pause time after Direction Change (min. 5 microSeconds)
 #define T3_PULSE_WIDTH      5     // Duration time click pulse width (min. 2.5 microSeconds)
-#define T3_TIME_COUNTS      3     // #Time_Counts = Target_Time / Time_Resolution - 1
+#define T3_TIME_COUNTS      3     // Time_Counts = Target_Time / (Time_Resolution - 1)
 
 #endif /* _CONFIG_H_ */
