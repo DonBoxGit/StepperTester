@@ -79,7 +79,6 @@ void loop() {
     _delay_ms(400);
     mainScreen(pDisplay, pMotor, pos);
     bool screenState = false;
-    bool flagScreen = true;
     Timer updateScreenRate(50);
     Timer delayVelocityScreen(1000);
 
@@ -144,7 +143,8 @@ void loop() {
         screenState = false;
         mainScreen(pDisplay, pMotor, pos);
       }
-      
+      // if (screenState) Serial.println("Draw");
+      // else Serial.println("Not draw");
       if (screenState && updateScreenRate.ready()) 
         mainScreen(pDisplay, pMotor, pos);
     }
