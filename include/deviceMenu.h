@@ -20,14 +20,16 @@ const float TIMER_RESOLUTION = 1.0F / (F_CPU / 256); // 256 - prescaller
 #define rectStatusWidth 46
 #define roundRectCorner 3
 
-extern const uint8_t Y;
+/* Common Y coordinate */
+ extern const uint8_t Y;
 
-/* The List of Stepper Drivers */
+/* The list of stepper drivers models*/
 extern const char *sDriver[];
 
 /* Quantity Items of sDriver Array */
 extern const uint8_t sizeArray;
 
+/* Menu function and screen draw */
 void selectMenu(Adafruit_SSD1306 *display, uint8_t item, bool buttonState);
 uint8_t calcCenter(uint8_t sLength);
 void mainScreen(Adafruit_SSD1306 *display, Motor *motor, uint8_t item);
