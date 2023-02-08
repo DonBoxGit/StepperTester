@@ -78,7 +78,9 @@ void loop() {
     selectMenu(pDisplay, pos, true);
     _delay_ms(400);
     mainScreen(pDisplay, pMotor, pos);
-    bool screenState = false;
+    bool screenState = false; // State of main screen
+    /* For the correct draw main screen */
+    bool exitVelocityScreen = false;  // When VelocityScreen have closed variable = true
     Timer updateScreenRate(50);
     Timer delayVelocityScreen(1000);
 
