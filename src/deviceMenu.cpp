@@ -3,6 +3,7 @@
 Blink blinkMotorStatus(500);
 
 const uint8_t Y = 12;
+/* The list of drives */
 const char *sDriver[] = {
   "TB6600",
   "TB6560",
@@ -14,11 +15,13 @@ const uint8_t sizeArray = sizeof(sDriver) / sizeof(char*);
 
 void selectMenu(Adafruit_SSD1306 *display, uint8_t item, bool buttonState) {
   display->clearDisplay();
+
   /* Top */
   if (item != 0) {
       display->setCursor(calcCenter(strlen(sDriver[item - 1])),  Y - CHARACTER_HEIGHT);
       display->print(sDriver[item - 1]);
   }
+
   /* Center */
     uint8_t x = calcCenter(strlen(sDriver[item]));
     uint8_t rectWidth = CHARACTER_WIDTH * strlen(sDriver[item]) + 14;
@@ -36,6 +39,7 @@ void selectMenu(Adafruit_SSD1306 *display, uint8_t item, bool buttonState) {
         display->print(sDriver[item]);
         display->setTextColor(WHITE);
     }
+    
   /* Bottom */ 
   if (item != sizeArray - 1) {
     display->setCursor(calcCenter(strlen(sDriver[item + 1])),  Y + CHARACTER_HEIGHT);
@@ -114,6 +118,7 @@ void velocityScreen(Adafruit_SSD1306 *display, Motor *motor) {
   display->setCursor(0, 0);
   display->print(stepsPerSec);
   display->setCursor(50, 10);
+
   /* Computing and print quantity of steps per second */
   display->print(1 / (TIMER_RESOLUTION * motor->getPulse() * 2));
   display->setCursor(0,20);
