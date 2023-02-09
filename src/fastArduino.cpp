@@ -14,7 +14,7 @@ void far::pinMode(uint8_t pin, uint8_t mode) {
         DDRC  &= ~(1 << (pin - 14));
         PORTC &= ~(1 << (pin - 14));
       }
-      return;
+      break;
 
     case OUTPUT:
       if (pin < 8) {
@@ -27,7 +27,7 @@ void far::pinMode(uint8_t pin, uint8_t mode) {
         DDRC  |= (1 <<  (pin - 14));
         PORTC &= ~(1 << (pin - 14));
       }
-      return;
+      break;
       
     case INPUT_PULLUP:
       if (pin < 8) {
@@ -40,7 +40,7 @@ void far::pinMode(uint8_t pin, uint8_t mode) {
         DDRC  &= ~(1 << (pin - 14));
         PORTC |=  (1 << (pin - 14));
       }
-      return;
+      break;
   }
 }
 
