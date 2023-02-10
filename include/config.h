@@ -20,6 +20,8 @@
 /*--------------------Button and Sensor Connection Pins----------------------*/
 #define BUTTON_RIGHT_PIN    A0
 #define BUTTON_LEFT_PIN     A1
+#define TOGLE_RIGHT_PIN     8
+#define TOGLE_LEFT_PIN      11
 #define BUTTON_RESET_PIN    10
 #define TERM_SW_PIN_1       9
 #define TERM_SW_PIN_2       12
