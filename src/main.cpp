@@ -27,8 +27,8 @@ Motor *pMotor = new Motor(STEP_PIN, DIR_PIN, ENBL_PIN);
 EncButton<EB_TICK, DT, SLK, SW> encoder;
 
 /* Initialization buttons of control */
-EncButton<EB_TICK, BUTTON_RIGHT_PIN> right_btn(INPUT_PULLUP);
-EncButton<EB_TICK, BUTTON_LEFT_PIN>  left_btn (INPUT_PULLUP);
+EncButton<EB_TICK, TOGLE_RIGHT_PIN> right_togle(INPUT_PULLUP);
+EncButton<EB_TICK, TOGLE_LEFT_PIN>  left_togle (INPUT_PULLUP);
 EncButton<EB_TICK, BUTTON_RESET_PIN> reset_btn(INPUT_PULLUP);
 
 /* Initialization of terminate switches */
@@ -85,8 +85,8 @@ void loop() {
     Timer delayVelocityScreen(1000);
 
     while (true) {
-      right_btn.tick();
-      left_btn.tick();
+      right_togle.tick();
+      left_togle.tick();
       reset_btn.tick();
       term_sw_1.tick();
       term_sw_2.tick();
@@ -107,12 +107,12 @@ void loop() {
         screenState = false;
         delayVelocityScreen.resetCount();
       }
-      if (right_btn.press()) {
+      if (right_togle.press()) {
           pMotor->setDirection(Direction::FORWARD);
           pMotor->setEnable(EnableState::ON);
           pMotor->execute(MotorState::WORK);
           screenState = true;
-      } else if (right_btn.release()) {
+      } else if (right_togle.release()) {
           pMotor->execute(MotorState::STOP);
           pMotor->setEnable(EnableState::OFF);
           screenState = false;
@@ -120,12 +120,12 @@ void loop() {
           mainScreen(pDisplay, pMotor, pos);
       }
 
-      if (left_btn.press()) {
+      if (left_togle.press()) {
           pMotor->setDirection(Direction::REVERSE);
           pMotor->setEnable(EnableState::ON);
           pMotor->execute(MotorState::WORK);
           screenState = true;
-      } else if (left_btn.release()) {
+      } else if (left_togle.release()) {
           pMotor->execute(MotorState::STOP);
           pMotor->setEnable(EnableState::OFF);
           screenState = false;
