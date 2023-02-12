@@ -9,6 +9,7 @@ Motor::Motor (const uint8_t stp,
     far::pinMode(dir_pin,    OUTPUT);
     far::pinMode(enable_pin, OUTPUT);
     setEnable(EnableState::OFF);
+    motorState = static_cast<bool>(MotorState::STOP);
 }
 
 Motor::~Motor() {}
@@ -26,14 +27,14 @@ void Motor::init() {
 
 void Motor::run() {
     motorState = static_cast<bool>(MotorState::WORK);
-    if(!((TIMSK1 >> OCIE1A) & 1)) {
+    if (!((TIMSK1 >> OCIE1A) & 1)) {
         TIMSK1  |= (1 << OCIE1A);
     }
 }
 
 void Motor::stop() {
     motorState = static_cast<bool>(MotorState::STOP);
-    if((TIMSK1 >> OCIE1A) & 1) {
+    if ((TIMSK1 >> OCIE1A) & 1) {
         TIMSK1 &= ~(1 << OCIE1A);
         TCNT1 = 0x00;
         far::digitalWrite(step_pin, 0);
@@ -47,7 +48,7 @@ void Motor::execute(MotorState state) {
 void Motor::setEnable(EnableState state) {
     switch(state) {
         case EnableState::ON:
-            if(far::digitalRead(enable_pin)) {
+            if (far::digitalRead(enable_pin)) {
                 TIMSK1 &= ~(1 << OCIE1A);
                 TCNT1 = 0x00;
                 far::digitalWrite(enable_pin, enableState = static_cast<bool>(state));
@@ -57,7 +58,7 @@ void Motor::setEnable(EnableState state) {
             break;
 
         case EnableState::OFF:
-            if(!far::digitalRead(enable_pin))
+            if (!far::digitalRead(enable_pin))
                 far::digitalWrite(enable_pin, enableState = static_cast<bool>(state));
             break;
     }
@@ -66,7 +67,7 @@ void Motor::setEnable(EnableState state) {
 void Motor::setDirection(Direction state) {
     switch(state) {
         case Direction::FORWARD:
-            if(!far::digitalRead(dir_pin)) {
+            if (!far::digitalRead(dir_pin)) {
                 TIMSK1 &= ~(1 << OCIE1A);
                 TCNT1 = 0x00;
                 far::digitalWrite(dir_pin, dirState = static_cast<bool>(state));
@@ -76,7 +77,7 @@ void Motor::setDirection(Direction state) {
             break;
             
         case Direction::REVERSE:
-            if(far::digitalRead(dir_pin)) {
+            if (far::digitalRead(dir_pin)) {
                 TIMSK1 &= ~(1 << OCIE1A);
                 TCNT1 = 0x00;
                 far::digitalWrite(dir_pin, dirState = static_cast<bool>(state));
@@ -121,4 +122,16 @@ uint16_t Motor::getPulse() {
 
 bool Motor::getMotorState() {
     return motorState;
+}
+
+void Motor::oneStep(Direction state) {
+    if (far::digitalRead(enable_pin))
+        far::digitalWrite(enable_pin, 0);
+    if (far::digitalRead(dir_pin) != static_cast<bool>(state))
+        far::digitalWrite(dir_pin, static_cast<bool>(state));
+    _delay_us(T2_DURATION);
+    far::digitalWrite(step_pin, 1);
+    _delay_ms(10);
+    far::digitalWrite(step_pin, 0);
+    _delay_ms(10);
 }

@@ -20,16 +20,17 @@ class Motor {
         static void init(void);
         void setEnable(EnableState);
         void setDirection(Direction);
+        void incSteps(void);
+        void updatePulse(int16_t);
+        void resetSteps(void);
         bool getEnable(void);
         bool getMotorState(void);
         bool getDirection(void);
-        void execute(MotorState);
-        void incSteps(void);
-        void resetSteps(void);
         uint16_t getSteps(void);
-        void updatePulse(int16_t);
-        void refreshPulse(void);
         uint16_t getPulse(void);
+        void refreshPulse(void);
+        void oneStep(Direction);
+        void execute(MotorState);
 
     private:
         void run(void);
