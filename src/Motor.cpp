@@ -131,7 +131,7 @@ void Motor::oneStep(Direction state) {
         far::digitalWrite(dir_pin, static_cast<bool>(state));
     _delay_us(T2_DURATION);
     far::digitalWrite(step_pin, 1);
-    _delay_ms(10);
+    _delay_ms(ONE_STEP_MEANDR);
     far::digitalWrite(step_pin, 0);
-    _delay_ms(10);
+    _delay_ms(ONE_STEP_MEANDR);
 }
