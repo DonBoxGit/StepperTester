@@ -2,7 +2,9 @@
 
 Blink blinkMotorStatus(500);
 
+uint8_t coeff = 100;
 const uint8_t Y = 12;
+
 /* The list of drives */
 const char *sDriver[] = {
   "TB6600",
@@ -11,7 +13,7 @@ const char *sDriver[] = {
   "DRV8825",
   "DM5425"
 };
-const uint8_t sizeArray = sizeof(sDriver) / sizeof(char*);
+const uint8_t driversArray = sizeof(sDriver) / sizeof(char*);
 
 void selectMenu(Adafruit_SSD1306 *display, uint8_t item, bool buttonState) {
   display->clearDisplay();
@@ -41,7 +43,7 @@ void selectMenu(Adafruit_SSD1306 *display, uint8_t item, bool buttonState) {
     }
     
   /* Bottom */ 
-  if (item != sizeArray - 1) {
+  if (item != driversArray - 1) {
     display->setCursor(calcCenter(strlen(sDriver[item + 1])),  Y + CHARACTER_HEIGHT);
     display->print(sDriver[item + 1]);
   }
@@ -131,4 +133,10 @@ void velocityScreen(Adafruit_SSD1306 *display, Motor *motor) {
 
 uint8_t calcCenter(uint8_t sLength) {
   return (DISPLAY_WIDTH - CHARACTER_WIDTH * sLength) / 2;
+}
+
+void computingCoeff(Motor *motor, uint8_t &incCoeff) {
+  if(motor->getPulse() < 100) incCoeff = 1;
+  else if(motor->getPulse() < 250) incCoeff = 10;
+  else if(motor->getPulse() > 400) incCoeff = 100;
 }

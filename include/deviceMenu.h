@@ -8,6 +8,9 @@
 #include "Motor.h"
 #include "timer_blink.h"
 
+/* The increment coefficient of pulse */
+extern uint8_t coeff;
+
 extern Blink blinkMotorStatus;
 #define CHARACTER_WIDTH 7
 #define CHARACTER_HEIGHT 11
@@ -27,12 +30,13 @@ const float TIMER_RESOLUTION = 1.0F / (F_CPU / 256); // 256 - prescaller
 extern const char *sDriver[];
 
 /* Quantity Items of sDriver Array */
-extern const uint8_t sizeArray;
+extern const uint8_t driversArray;
 
 /* Menu function and screen draw */
 void selectMenu(Adafruit_SSD1306 *display, uint8_t item, bool buttonState);
 uint8_t calcCenter(uint8_t sLength);
 void mainScreen(Adafruit_SSD1306 *display, Motor *motor, uint8_t item);
 void velocityScreen(Adafruit_SSD1306 *display, Motor *motor);
+void computingCoeff(Motor *motor, uint8_t &incCoeff);
 
 #endif /* _DEVICE_MENU_H_*/
