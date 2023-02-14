@@ -120,18 +120,26 @@ uint16_t Motor::getPulse() {
     return pulse;
 }
 
-bool Motor::getMotorState() {
+uint8_t Motor::getMotorState() {
     return motorState;
 }
 
 void Motor::oneStep(Direction state) {
+    motorState = static_cast<uint8_t>(MotorState::STEP);
     if (far::digitalRead(enable_pin))
         far::digitalWrite(enable_pin, 0);
-    if (far::digitalRead(dir_pin) != static_cast<bool>(state))
-        far::digitalWrite(dir_pin, static_cast<bool>(state));
+
+    dirState = static_cast<bool>(state);
+    if (far::digitalRead(dir_pin) != dirState)
+        far::digitalWrite(dir_pin, dirState);
+
     _delay_us(T2_DURATION);
     far::digitalWrite(step_pin, 1);
     _delay_ms(ONE_STEP_MEANDR);
     far::digitalWrite(step_pin, 0);
     _delay_ms(ONE_STEP_MEANDR);
+}
+
+void Motor::setMotorState(MotorState state) {
+    motorState = static_cast<uint8_t>(state);
 }

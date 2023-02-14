@@ -8,7 +8,7 @@
 
 enum class EnableState : bool { ON = false, OFF = true };
 enum class Direction   : bool { REVERSE = false, FORWARD = true };
-enum class MotorState  : bool { STOP = false, WORK = true };
+enum class MotorState  : uint8_t { STOP = 0, WORK = 1, STEP = 2 };
 
 class Motor {
     public:
@@ -20,11 +20,12 @@ class Motor {
         static void init(void);
         void setEnable(EnableState);
         void setDirection(Direction);
+        void setMotorState(MotorState);
         void incSteps(void);
         void updatePulse(int16_t);
         void resetSteps(void);
         bool getEnable(void);
-        bool getMotorState(void);
+        uint8_t getMotorState(void);
         bool getDirection(void);
         uint16_t getSteps(void);
         uint16_t getPulse(void);
@@ -38,7 +39,7 @@ class Motor {
 
     private:
         bool enableState;
-        bool motorState;
+        uint8_t motorState;
         bool dirState;
         const uint8_t step_pin;
         const uint8_t dir_pin;
