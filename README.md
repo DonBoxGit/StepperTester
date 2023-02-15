@@ -1,2 +1,2 @@
-"# StepperTester" 
-"# StepperTester" 
+"# StepperTester"
+"# Tester of stepper motors"
