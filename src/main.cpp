@@ -9,7 +9,7 @@
  *         Set direction : HIGH - ClockWise, LOW - CounterClockWise   *
  **********************************************************************/
 
-#define F_CPU 16000000L
+#define F_CPU 16000000UL
 
 #include "config.h"
 #include "Motor.h"
@@ -18,18 +18,21 @@
 #include <Adafruit_SSD1306.h>
 #include "deviceMenu.h"
 
-Adafruit_SSD1306 *pDisplay = new Adafruit_SSD1306(DISPLAY_WIDTH,
-                                                  DISPLAY_HEIGHT,
+/* Display object pointer */
+Adafruit_SSD1306 *pDisplay = new Adafruit_SSD1306(DISPLAY_WIDTH, DISPLAY_HEIGHT,
                                                   &Wire, OLED_RESET);
+/* Motor object pointer */
 Motor *pMotor = new Motor(STEP_PIN, DIR_PIN, ENBL_PIN);
 
 /* Encoder initialization */
 EncButton<EB_TICK, DT, SLK, SW> encoder;
 
 /* Initialization buttons of control */
-EncButton<EB_TICK, TOGLE_RIGHT_PIN> right_togle(INPUT_PULLUP);
-EncButton<EB_TICK, TOGLE_LEFT_PIN>  left_togle (INPUT_PULLUP);
-EncButton<EB_TICK, BUTTON_RESET_PIN> reset_btn(INPUT_PULLUP);
+EncButton<EB_TICK, TOGLE_RIGHT_PIN>  right_togle(INPUT_PULLUP);
+EncButton<EB_TICK, TOGLE_LEFT_PIN>   left_togle (INPUT_PULLUP);
+EncButton<EB_TICK, BUTTON_RESET_PIN> reset_btn  (INPUT_PULLUP);
+EncButton<EB_TICK, BUTTON_LEFT_PIN>  left_btn   (INPUT_PULLUP);
+EncButton<EB_TICK, BUTTON_RIGHT_PIN> right_btn  (INPUT_PULLUP);
 
 /* Initialization of terminate switches */
 EncButton<EB_TICK, TERM_SW_PIN_1> term_sw_1(INPUT_PULLUP);
@@ -62,10 +65,10 @@ void setup() {
 
 void loop() {
   encoder.tick();
-  static int8_t pos = 0;
+  static int8_t pos = 0;  // Position in menu
 
   if (encoder.right()) {
-    if(++pos > (sizeArray - 1)) pos = sizeArray - 1;
+    if(++pos > (driversArray - 1)) pos = driversArray - 1;
     selectMenu(pDisplay, pos, false);
   }
 
@@ -80,29 +83,35 @@ void loop() {
     mainScreen(pDisplay, pMotor, pos);
     bool screenState = false; // State of main screen
     /* For the correct draw main screen */
-    bool exitVelocityScreen = false;  // When VelocityScreen have closed variable = true
+    //bool exitVelocityScreen = false;  // When VelocityScreen have closed variable = true
     Timer updateScreenRate(50);
     Timer delayVelocityScreen(1000);
 
     while (true) {
-      right_togle.tick();
-      left_togle.tick();
       reset_btn.tick();
       term_sw_1.tick();
       term_sw_2.tick();
+      right_togle.tick();
+      left_togle.tick();
+
       if (!encoder.tick() && delayVelocityScreen.ready()) {  // <-!
         screenState = true;
       }
 
       if (encoder.right()) {
-        pMotor->updatePulse(100);
+        computingCoeff(pMotor, coeff);
+        pMotor->updatePulse(coeff);
         velocityScreen(pDisplay, pMotor);
         screenState = false;
         delayVelocityScreen.resetCount();
       }
 
       if (encoder.left()) {
-        pMotor->updatePulse(-100);
+        computingCoeff(pMotor, coeff);
+        if (pMotor->getPulse() > MIN_PULSE)
+          pMotor->updatePulse(-coeff);
+        else
+          pMotor->updatePulse(0);
         velocityScreen(pDisplay, pMotor);
         screenState = false;
         delayVelocityScreen.resetCount();
@@ -132,8 +141,24 @@ void loop() {
           blinkMotorStatus.resetStatus();
           mainScreen(pDisplay, pMotor, pos);
       }
+      
+      if (!right_togle.state() && !left_togle.state()) {
+        right_btn.tick();
+        left_btn.tick();
+        if (left_btn.press()) {
+          pMotor->oneStep(Direction::REVERSE);
+          pMotor->incSteps();
+          screenState = true;
+          delayOneStepVision.resetCount();
+        } else if (right_btn.press()) {
+          pMotor->oneStep(Direction::FORWARD);
+          pMotor->incSteps();
+          screenState = true;
+          delayOneStepVision.resetCount();
+        }
+      }
 
-      if (reset_btn.click()) {
+      if (reset_btn.press()) {
         pMotor->resetSteps();
         mainScreen(pDisplay, pMotor, pos);
       }
@@ -145,8 +170,7 @@ void loop() {
         screenState = false;
         mainScreen(pDisplay, pMotor, pos);
       }
-      // if (screenState) Serial.println("Draw");
-      // else Serial.println("Not draw");
+
       if (screenState && updateScreenRate.ready()) 
         mainScreen(pDisplay, pMotor, pos);
     }
