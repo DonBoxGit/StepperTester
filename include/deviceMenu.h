@@ -12,10 +12,15 @@
 extern uint8_t coeff;
 
 extern Blink blinkMotorStatus;
+extern Timer delayOneStepVision;
+
 #define CHARACTER_WIDTH 7
 #define CHARACTER_HEIGHT 11
 
 const float TIMER_RESOLUTION = 1.0F / (F_CPU / 256); // 256 - prescaller
+const float STEPS_IN_REVOLUTION = 360 / STEP_ANGLE;
+/* Quantity of steps pre second */
+extern float stepsPS;
 
 /* Motor status rectangle property */
 #define motorStatusCoordX 1
