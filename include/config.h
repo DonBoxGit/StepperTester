@@ -42,7 +42,7 @@
 #define MIN_PULSE           40
 #define STEP_ANGLE          7.5F
 
-/*---------------------Miscellaneous constant project------------------------*/
+/*---------------------Miscellaneous constants project-----------------------*/
 #define ONE_STEP_MEANDR     10
 
 #endif /* _CONFIG_H_ */
