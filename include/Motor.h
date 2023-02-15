@@ -39,8 +39,8 @@ class Motor {
 
     private:
         bool enableState;
-        uint8_t motorState;
         bool dirState;
+        uint8_t motorState;
         const uint8_t step_pin;
         const uint8_t dir_pin;
         const uint8_t enable_pin;
