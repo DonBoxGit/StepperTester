@@ -40,6 +40,7 @@
 
 /*-----------------Specification of MITSUMI M42SP-7 Motor--------------------*/
 #define MIN_PULSE           40
+#define STEP_ANGLE          7.5F
 
 /*---------------------Miscellaneous constant project------------------------*/
 #define ONE_STEP_MEANDR     10
