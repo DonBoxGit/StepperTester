@@ -1,9 +1,11 @@
 #include "deviceMenu.h"
 
 Blink blinkMotorStatus(500);
+Timer delayOneStepVision(400);
 
 uint8_t coeff = 100;
 const uint8_t Y = 12;
+float stepsPS = 0.0;
 
 /* The list of drives */
 const char *sDriver[] = {
@@ -64,49 +66,69 @@ void mainScreen(Adafruit_SSD1306 *display, Motor *motor, uint8_t item) {
   display->print(motor->getSteps());
 
   /* Display motor status */
-  if (motor->getMotorState()) {
-    if (motor->getDirection()) {
-      if (blinkMotorStatus.getStatus()) {
+  switch (motor->getMotorState()) {
+    case static_cast<uint8_t>(MotorState::WORK):
+      if (motor->getDirection()) {
+        if (blinkMotorStatus.getStatus()) {
+          display->fillRoundRect(motorStatusCoordX, motorStatusCoordY,
+                                 rectStatusWidth, CHARACTER_HEIGHT,
+                                 roundRectCorner, WHITE);
+          display->setTextColor(BLACK);
+          display->setCursor(motorStatusCoordX + 3, motorStatusCoordY + 2);
+          display->print("FORWARD");
+        }
+      } else {
+        if (blinkMotorStatus.getStatus()) {
+          display->fillRoundRect(motorStatusCoordX, motorStatusCoordY,
+                                 rectStatusWidth, CHARACTER_HEIGHT,
+                                 roundRectCorner, WHITE);
+          display->setTextColor(BLACK);
+          display->setCursor(motorStatusCoordX + 3, motorStatusCoordY + 2);
+          display->print("REVERSE");
+        }
+      }
+    break;
+
+    case static_cast<uint8_t>(MotorState::STOP):
+      if (!far::digitalRead(TERM_SW_PIN_1)) {
         display->fillRoundRect(motorStatusCoordX, motorStatusCoordY,
-                               rectStatusWidth, CHARACTER_HEIGHT,
+                               rectStatusWidth - 5, CHARACTER_HEIGHT,
                                roundRectCorner, WHITE);
         display->setTextColor(BLACK);
         display->setCursor(motorStatusCoordX + 3, motorStatusCoordY + 2);
-        display->print(F("FORWARD"));
-      }
-    } else {
-      if (blinkMotorStatus.getStatus()) {
+        display->print("TERM-1");
+      } else if (!far::digitalRead(TERM_SW_PIN_2)) {
         display->fillRoundRect(motorStatusCoordX, motorStatusCoordY,
-                               rectStatusWidth, CHARACTER_HEIGHT,
+                               rectStatusWidth - 5, CHARACTER_HEIGHT,
                                roundRectCorner, WHITE);
         display->setTextColor(BLACK);
         display->setCursor(motorStatusCoordX + 3, motorStatusCoordY + 2);
-        display->print(F("REVERSE"));
+        display->print("TERM-2");
+      } else {
+        display->fillRoundRect(motorStatusCoordX +4 , motorStatusCoordY,
+                               rectStatusWidth - 15, CHARACTER_HEIGHT,
+                               roundRectCorner, WHITE);
+        display->setTextColor(BLACK);
+        display->setCursor(motorStatusCoordX + 8, motorStatusCoordY + 2);
+        display->print("STOP");
       }
-    }
-  } else {
-    if (!far::digitalRead(TERM_SW_PIN_1)) {
+    break;
+
+    case static_cast<uint8_t>(MotorState::STEP):
       display->fillRoundRect(motorStatusCoordX, motorStatusCoordY,
-                             rectStatusWidth - 5, CHARACTER_HEIGHT,
-                             roundRectCorner, WHITE);
+                               rectStatusWidth, CHARACTER_HEIGHT,
+                               roundRectCorner, WHITE);
       display->setTextColor(BLACK);
       display->setCursor(motorStatusCoordX + 3, motorStatusCoordY + 2);
-      display->print(F("TERM-1"));
-    } else if (!far::digitalRead(TERM_SW_PIN_2)) {
-      display->fillRoundRect(motorStatusCoordX, motorStatusCoordY,
-                             rectStatusWidth - 5, CHARACTER_HEIGHT,
-                             roundRectCorner, WHITE);
-      display->setTextColor(BLACK);
-      display->setCursor(motorStatusCoordX + 3, motorStatusCoordY + 2);
-      display->print(F("TERM-2"));
-    } else {
-      display->fillRoundRect(motorStatusCoordX +4 , motorStatusCoordY,
-                             rectStatusWidth - 15, CHARACTER_HEIGHT,
-                             roundRectCorner, WHITE);
-      display->setTextColor(BLACK);
-      display->setCursor(motorStatusCoordX + 8, motorStatusCoordY + 2);
-      display->print(F("STOP"));
-    }
+      if (!delayOneStepVision.ready()) {
+        if (motor->getDirection())
+          display->print("STEP>>>");
+        else
+          display->print("<<<STEP");
+      } else {
+        motor->setMotorState(MotorState::STOP);
+      }
+    break;
   }
   
   display->setTextColor(WHITE);
@@ -114,20 +136,25 @@ void mainScreen(Adafruit_SSD1306 *display, Motor *motor, uint8_t item) {
 }
 
 void velocityScreen(Adafruit_SSD1306 *display, Motor *motor) {
-  const char *stepsPerSec = "Steps per second";
   display->clearDisplay();
   //display->drawRect(0, 0, 128, 32, WHITE);
-  display->setCursor(0, 0);
-  display->print(stepsPerSec);
-  display->setCursor(50, 10);
 
   /* Computing and print quantity of steps per second */
-  display->print(1 / (TIMER_RESOLUTION * motor->getPulse() * 2));
-  display->setCursor(0,20);
+  display->setCursor(0, 0);
+  display->print("Steps p/s: ");
+  display->setCursor(62, 0);
+  stepsPS = 1 / (TIMER_RESOLUTION * motor->getPulse() * 2);
+  display->print(stepsPS);
+  display->setCursor(0, 12);
   display->print("Pulse: ");
-  display->setCursor(49, 20);
+  /* Print pulse at the moment */
+  display->setCursor(42, 12);
   display->print(motor->getPulse());
-
+  /* Computing and print revolutions per second */
+  display->setCursor(0, 24);
+  display->print("Rev. p/s: ");
+  display->print(stepsPS / STEPS_IN_REVOLUTION);
+  
   display->display();
 }
 
