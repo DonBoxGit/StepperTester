@@ -17,9 +17,12 @@ extern Timer delayOneStepVision;
 #define CHARACTER_WIDTH 7
 #define CHARACTER_HEIGHT 11
 
+/* Timer resolution of interrupt */
 const float TIMER_RESOLUTION = 1.0F / (F_CPU / 256); // 256 - prescaller
-const float STEPS_IN_REVOLUTION = 360 / STEP_ANGLE;
-/* Quantity of steps pre second */
+
+const float STEPS_IN_REVOLUTION = 360 / STEP_ANGLE;  // 360 - degrees is the full revolution
+
+/* Quantity of steps per second */
 extern float stepsPS;
 
 /* Motor status rectangle property */
