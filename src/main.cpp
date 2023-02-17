@@ -1,12 +1,12 @@
 /**********************************************************************
- *                      Stepper Motor Tester v.1.2.0                  *
- *                            For AtMega328p                          *
- *       Stepper Motor - 1: MITSUMI M42SP-7                           *
- *         Step Angle: 7.5 degree                                     *
+ *                   Stepper Motor Tester v.1.2.0                     *
  *                                                                    *
- *       Driver : A4988                                               *
- *         Set enable: LOW - On, HIGH - Off                           *
- *         Set direction : HIGH - ClockWise, LOW - CounterClockWise   *
+ *    For AtMega328p and Driver A4988. The MITSUMI M42SP-7 stepper    *
+ *  motor in use, which has step angle 7.5 degree. Any other similar  *
+ *  motor can be used. Also use Motor class for control motor stepper *
+ *  using Timer1(16bit) interrupt.                                    *
+ *                                                                    *
+ *                                                                    *
  **********************************************************************/
 
 #define F_CPU 16000000UL
@@ -15,7 +15,6 @@
 #include "Motor.h"
 #include "fastArduino.h"
 #include <EncButton.h>
-#include <Adafruit_SSD1306.h>
 #include "deviceMenu.h"
 
 /* Display object pointer */
