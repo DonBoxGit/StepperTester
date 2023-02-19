@@ -6,7 +6,7 @@
  *  motor can be used. Also use Motor class for control motor stepper *
  *  using Timer1(16bit) interrupt.                                    *
  *                                                                    *
- *                                                                    *
+ *  Author : Roman Yakubovskiy                                        *
  **********************************************************************/
 
 #define F_CPU 16000000UL
