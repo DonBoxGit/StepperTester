@@ -21,7 +21,7 @@ void Timer::resetCount() {
   _tmr = millis();
 }
 
-/*------------------------------*Class Blink---------------------------------*/
+/*-------------------------------Class Blink---------------------------------*/
 Blink::Blink(uint16_t period) : Timer(period) {}
   
 Blink::~Blink() {}
