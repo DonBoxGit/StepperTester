@@ -38,7 +38,7 @@ void isr() { encoder.tickISR(); }
 ISR(TIMER1_COMPA_vect) {
     pMotor->refreshPulse();
     far::digitalWrite(STEP_PIN, !far::digitalRead(STEP_PIN));
-    if(far::digitalRead(STEP_PIN)) pMotor->incSteps();
+    if(far::digitalRead(STEP_PIN)) ++pMotor->steps;
 }
 
 void setup() {
@@ -53,7 +53,8 @@ void setup() {
   pDisplay->begin(SSD1306_SWITCHCAPVCC, DISPLAY_I2C_ADDR);
   pDisplay->setTextSize(1);
   pDisplay->setTextColor(WHITE);
-  selectMenu(pDisplay, 0, false);
+  startMenu(pDisplay, 0, false);
+  //selectMenu(pDisplay, 0, false);
 }
 
 void loop() {
@@ -61,22 +62,25 @@ void loop() {
   static int8_t pos = 0;  // Position in menu
 
   if (encoder.right()) {
-    if(++pos > (driversArray - 1)) pos = driversArray - 1;
-    selectMenu(pDisplay, pos, false);
+    //if(++pos > (driversArray - 1)) pos = driversArray - 1;
+    if(++pos > 1) pos = 0;
+    startMenu(pDisplay, pos, false);
+    //selectMenu(pDisplay, pos, false);
   }
 
   if (encoder.left()) {
-    if(--pos < 0) pos = 0;
-    selectMenu(pDisplay, pos, false);
+    if(--pos < 0) pos = 1;
+    startMenu(pDisplay, pos, false);
+    //selectMenu(pDisplay, pos, false);
   }
 
   if (encoder.press()) {
-    selectMenu(pDisplay, pos, true);
+    startMenu(pDisplay, pos, true);
+    //selectMenu(pDisplay, pos, true);
     _delay_ms(400);
     mainScreen(pDisplay, pMotor, pos);
     bool screenState = false; // State of main screen
-    /* For the correct draw main screen */
-    //bool exitVelocityScreen = false;  // When VelocityScreen have closed variable = true
+    
     Timer updateScreenRate(50);
     Timer delayVelocityScreen(1000);
 
@@ -140,12 +144,10 @@ void loop() {
         left_btn.tick();
         if (left_btn.press()) {
           pMotor->oneStep(Direction::REVERSE);
-          pMotor->incSteps();
           screenState = true;
           delayOneStepVision.resetCount();
         } else if (right_btn.press()) {
           pMotor->oneStep(Direction::FORWARD);
-          pMotor->incSteps();
           screenState = true;
           delayOneStepVision.resetCount();
         }
@@ -164,8 +166,9 @@ void loop() {
         mainScreen(pDisplay, pMotor, pos);
       }
 
-      if (screenState && updateScreenRate.ready()) 
+      if (screenState && updateScreenRate.ready()) {
         mainScreen(pDisplay, pMotor, pos);
+      }
     }
   }
 }
