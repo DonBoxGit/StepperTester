@@ -7,6 +7,47 @@ uint8_t coeff = 100;
 const uint8_t Y = 12;
 float stepsPS = 0.0;
 
+const char *sMenu = "SELECT DRIVER";
+void startMenu(Adafruit_SSD1306 *display, uint8_t item, bool buttonState) {
+  display->clearDisplay();
+  //display->drawRect(0, 0, 128, 32, WHITE);
+  display->setCursor(26, 0);
+  display->print(sMenu);
+
+  display->setCursor(9, 17);
+  display->print("INTERNAL");
+  display->setCursor(72, 17);
+  display->print("EXTERNAL");
+
+  switch (item) {
+    case 0:
+      if (buttonState) {
+        display->fillRoundRect(6, 15, 54, CHARACTER_HEIGHT, roundRectCorner, WHITE);
+        display->setTextColor(BLACK);
+        display->setCursor(9, 17);
+        display->print("INTERNAL");
+        display->setTextColor(WHITE);
+      } else {
+        display->drawRoundRect(6, 15, 54, CHARACTER_HEIGHT, roundRectCorner, WHITE);
+      }
+      break;
+    case 1:
+      if (buttonState) {
+        display->fillRoundRect(68, 15, 54, CHARACTER_HEIGHT, roundRectCorner, WHITE);
+        display->setTextColor(BLACK);
+        display->setCursor(72, 17);
+        display->print("EXTERNAL");
+        display->setTextColor(WHITE);
+      } else {
+        display->drawRoundRect(68, 15, 54, CHARACTER_HEIGHT, roundRectCorner, WHITE);
+      }
+        
+      break;
+  }
+
+  display->display();
+}
+
 /* The list of drives */
 const char *sDriver[] = {
   "TB6600",
@@ -87,7 +128,7 @@ void mainScreen(Adafruit_SSD1306 *display, Motor *motor, uint8_t item) {
           display->print("REVERSE");
         }
       }
-    break;
+      break;
 
     case static_cast<uint8_t>(MotorState::STOP):
       if (!far::digitalRead(TERM_SW_PIN_1)) {
@@ -112,7 +153,7 @@ void mainScreen(Adafruit_SSD1306 *display, Motor *motor, uint8_t item) {
         display->setCursor(motorStatusCoordX + 8, motorStatusCoordY + 2);
         display->print("STOP");
       }
-    break;
+      break;
 
     case static_cast<uint8_t>(MotorState::STEP):
       display->fillRoundRect(motorStatusCoordX, motorStatusCoordY,
@@ -128,7 +169,7 @@ void mainScreen(Adafruit_SSD1306 *display, Motor *motor, uint8_t item) {
       } else {
         motor->setMotorState(MotorState::STOP);
       }
-    break;
+      break;
   }
   
   display->setTextColor(WHITE);
