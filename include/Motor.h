@@ -21,7 +21,6 @@ class Motor {
         void setEnable(EnableState);
         void setDirection(Direction);
         void setMotorState(MotorState);
-        void incSteps(void);
         void updatePulse(int16_t);
         void resetSteps(void);
         bool getEnable(void);
@@ -45,6 +44,7 @@ class Motor {
         const uint8_t dir_pin;
         const uint8_t enable_pin;
         volatile uint16_t pulse = 3000;
+    public:    
         volatile uint16_t steps = 0;
 };
 

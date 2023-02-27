@@ -96,10 +96,6 @@ bool Motor::getDirection() {
     return dirState;
 }
 
-void Motor::incSteps() {
-    ++steps;
-}
-
 void Motor::resetSteps() {
     steps = 0;
 }
@@ -138,6 +134,8 @@ void Motor::oneStep(Direction state) {
     _delay_ms(ONE_STEP_MEANDR);
     far::digitalWrite(step_pin, 0);
     _delay_ms(ONE_STEP_MEANDR);
+
+    ++steps;
 }
 
 void Motor::setMotorState(MotorState state) {
