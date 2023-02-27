@@ -9,13 +9,7 @@
  *  Author : Roman Yakubovskiy                                        *
  **********************************************************************/
 
-#define F_CPU 16000000UL
-
-#include "config.h"
-#include "Motor.h"
-#include "fastArduino.h"
-#include <EncButton.h>
-#include "deviceMenu.h"
+#include "main.h"
 
 /* Display object pointer */
 Adafruit_SSD1306 *pDisplay = new Adafruit_SSD1306(DISPLAY_WIDTH, DISPLAY_HEIGHT,
