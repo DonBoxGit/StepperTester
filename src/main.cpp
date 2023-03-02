@@ -95,6 +95,11 @@ void loop() {
         screenState = true;
       }
 
+      if (encoder.press()) {
+        settingMenu(pDisplay);
+        screenState = false;
+      }
+
       if (encoder.right()) {
         computingCoeff(pMotor, coeff);
         pMotor->updatePulse(coeff);
@@ -168,6 +173,9 @@ void loop() {
 
       if (screenState && updateScreenRate.ready()) {
         mainScreen(pDisplay, pMotor, pos);
+        // if (!right_togle.state() && !left_togle.state()) {
+        //   screenState = false;
+        // }
       }
     }
   }

@@ -1,12 +1,13 @@
 #include "deviceMenu.h"
 
 Blink blinkMotorStatus(500);
-Timer delayOneStepVision(400);
+Timer delayOneStepVision(300);
 
 uint8_t coeff = 100;
 const uint8_t Y = 12;
 float stepsPS = 0.0;
 
+/* Menu for select driver stepper */
 const char *sMenu = "SELECT DRIVER";
 void startMenu(Adafruit_SSD1306 *display, uint8_t item, bool buttonState) {
   display->clearDisplay();
@@ -50,11 +51,8 @@ void startMenu(Adafruit_SSD1306 *display, uint8_t item, bool buttonState) {
 
 /* The list of drives */
 const char *sDriver[] = {
-  "TB6600",
-  "TB6560",
   "A4988",
-  "DRV8825",
-  "DM5425"
+  "EXTERNAL"
 };
 const uint8_t driversArray = sizeof(sDriver) / sizeof(char*);
 
@@ -183,7 +181,7 @@ void velocityScreen(Adafruit_SSD1306 *display, Motor *motor) {
   /* Computing and print quantity of steps per second */
   display->setCursor(0, 0);
   display->print("Steps p/s: ");
-  display->setCursor(62, 0);
+  display->setCursor(64, 0);
   stepsPS = 1 / (TIMER_RESOLUTION * motor->getPulse() * 2);
   display->print(stepsPS);
   display->setCursor(0, 12);
@@ -204,7 +202,7 @@ uint8_t calcCenter(uint8_t sLength) {
 }
 
 void computingCoeff(Motor *motor, uint8_t &incCoeff) {
-  if(motor->getPulse() < 100) incCoeff = 1;
-  else if(motor->getPulse() < 250) incCoeff = 10;
-  else if(motor->getPulse() > 400) incCoeff = 100;
+  if (motor->getPulse() < 100)      incCoeff = 1;
+  else if (motor->getPulse() < 250) incCoeff = 10;
+  else if (motor->getPulse() > 400) incCoeff = 100;
 }
