@@ -5,6 +5,10 @@
 #define STEP_PIN 6
 #define DIR_PIN  7
 #define ENBL_PIN 5
+/* Pins for set microsteps */
+#define MS1      9
+#define MS2      17
+#define MS3      13
 
 /*-------------------------Encoder Connection Pins---------------------------*/
 #define SLK 2         // Alternate notation S2
