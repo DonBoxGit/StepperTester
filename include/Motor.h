@@ -21,6 +21,7 @@ class Motor {
         void setEnable(EnableState);
         void setDirection(Direction);
         void setMotorState(MotorState);
+        void setMicrostep(uint8_t);
         void updatePulse(int16_t);
         void resetSteps(void);
         bool getEnable(void);
