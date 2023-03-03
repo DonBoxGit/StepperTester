@@ -88,6 +88,40 @@ void Motor::setDirection(Direction state) {
     }
 }
 
+void initMicrostepMode() {
+    far::pinMode(MS1, OUTPUT);
+    far::pinMode(MS2, OUTPUT);
+    far::pinMode(MS3, OUTPUT);
+
+    far::digitalWrite(MS1, 0);
+    far::digitalWrite(MS2, 0);
+    far::digitalWrite(MS2, 0);
+}
+
+void setMicrostep(uint8_t mode) {
+    switch (mode) {
+        case 1:         // Whole step
+            microstepMode = 1;
+            break;
+        
+        case 12:        // Half step
+            microstepMode = 12;
+            break;
+        
+        case 14:        // 1/4 step
+            microstepMode = 14;
+            break;
+
+        case 18:        // 1/8 step
+            microstepMode = 18;
+            break;
+
+        case 116:       // 1/16 step
+            microstepMode = 116;
+            break;
+    }
+}
+
 bool Motor::getEnable() {
     return !enableState;
 }
