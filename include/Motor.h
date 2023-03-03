@@ -18,6 +18,7 @@ class Motor {
 
         ~Motor();
         static void init(void);
+        static void initMicrostepMode(void);
         void setEnable(EnableState);
         void setDirection(Direction);
         void setMotorState(MotorState);
@@ -45,6 +46,7 @@ class Motor {
         const uint8_t dir_pin;
         const uint8_t enable_pin;
         volatile uint16_t pulse = 3000;
+        uint8_t microstepMode = 1;
     public:    
         volatile uint16_t steps = 0;
 };
