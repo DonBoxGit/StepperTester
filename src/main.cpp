@@ -44,6 +44,7 @@ ISR(TIMER1_COMPA_vect) {
 void setup() {
   Serial.begin(9600);
   Motor::init();
+  Motor::initMicrostepMode();
   /* Initialization of encoder and external interrupts */
   encoder.setEncType(0);  // Full step type encoder
   attachInterrupt(0, isr, CHANGE);
@@ -61,14 +62,14 @@ void loop() {
   encoder.tick();
   static int8_t pos = 0;  // Position in menu
 
-  if (encoder.right()) {
+  if (encoder.left()) {
     //if(++pos > (driversArray - 1)) pos = driversArray - 1;
     if(++pos > 1) pos = 0;
     startMenu(pDisplay, pos, false);
     //selectMenu(pDisplay, pos, false);
   }
 
-  if (encoder.left()) {
+  if (encoder.right()) {
     if(--pos < 0) pos = 1;
     startMenu(pDisplay, pos, false);
     //selectMenu(pDisplay, pos, false);
@@ -78,7 +79,9 @@ void loop() {
     startMenu(pDisplay, pos, true);
     //selectMenu(pDisplay, pos, true);
     _delay_ms(400);
-    mainScreen(pDisplay, pMotor, pos);
+    uint8_t id_driver = pos;
+    mainScreen(pDisplay, pMotor, id_driver);
+    pos = 0;
     bool screenState = false; // State of main screen
     
     Timer updateScreenRate(50);
@@ -96,8 +99,24 @@ void loop() {
       }
 
       if (encoder.press()) {
-        settingMenu(pDisplay);
-        screenState = false;
+        setMicrostepMenu(pDisplay, pos, false);
+        while (true) {
+          encoder.tick();
+          if (encoder.left()) {
+            if (++pos > 4) pos = 0;
+            setMicrostepMenu(pDisplay, pos, false);
+          }
+          if (encoder.right()) {
+            if (--pos < 0) pos = 4;
+            setMicrostepMenu(pDisplay, pos, false);
+          }
+          if (encoder.press()) {
+            setMicrostepMenu(pDisplay, pos, true);
+            _delay_ms(200);
+            mainScreen(pDisplay, pMotor, id_driver);
+            break;
+          }
+        }
       }
 
       if (encoder.right()) {
@@ -128,7 +147,7 @@ void loop() {
           pMotor->setEnable(EnableState::OFF);
           screenState = false;
           blinkMotorStatus.resetStatus();
-          mainScreen(pDisplay, pMotor, pos);
+          mainScreen(pDisplay, pMotor, id_driver);
       }
 
       if (left_togle.press()) {
@@ -141,7 +160,7 @@ void loop() {
           pMotor->setEnable(EnableState::OFF);
           screenState = false;
           blinkMotorStatus.resetStatus();
-          mainScreen(pDisplay, pMotor, pos);
+          mainScreen(pDisplay, pMotor, id_driver);
       }
       
       if (!right_togle.state() && !left_togle.state()) {
@@ -160,7 +179,7 @@ void loop() {
 
       if (reset_btn.press()) {
         pMotor->resetSteps();
-        mainScreen(pDisplay, pMotor, pos);
+        mainScreen(pDisplay, pMotor, id_driver);
       }
       
       if (term_sw_1.press() || term_sw_2.press()) {
@@ -168,11 +187,11 @@ void loop() {
         screenState  = true;
       } else if (term_sw_1.release() || term_sw_2.release()) {
         screenState = false;
-        mainScreen(pDisplay, pMotor, pos);
+        mainScreen(pDisplay, pMotor, id_driver);
       }
 
       if (screenState && updateScreenRate.ready()) {
-        mainScreen(pDisplay, pMotor, pos);
+        mainScreen(pDisplay, pMotor, id_driver);
         // if (!right_togle.state() && !left_togle.state()) {
         //   screenState = false;
         // }
