@@ -7,12 +7,91 @@ uint8_t coeff = 100;
 const uint8_t Y = 12;
 float stepsPS = 0.0;
 
+/* Draw microstep function */
+void setMicrostepMenu(Adafruit_SSD1306 *display, uint8_t item, bool buttonState) {
+  display->clearDisplay();
+  //display->drawRect(0, 0, 128, 32, WHITE);
+
+  display->setCursor(16, 0);
+  display->print("SELECT MICROSTEP");
+
+  display->setCursor(15, 12);
+  display->print("1  1/2  1/4  1/8");
+  display->setCursor(50, 22);
+  display->print("1/16");
+
+  switch (item) {
+    case 0:
+      if (buttonState) {
+        display->fillRoundRect(10, 10, 15, CHARACTER_HEIGHT, roundRectCorner, WHITE);
+        display->setTextColor(BLACK);
+        display->setCursor(15, 12);
+        display->print("1");
+        display->setTextColor(WHITE);
+      } else {
+        display->drawRoundRect(10, 10, 15, CHARACTER_HEIGHT, roundRectCorner, WHITE);
+      }
+      break;
+    
+    case 1:
+      if (buttonState) {
+        display->fillRoundRect(30, 10, 25, CHARACTER_HEIGHT, roundRectCorner, WHITE);
+        display->setTextColor(BLACK);
+        display->setCursor(34, 12);
+        display->print("1/2");
+        display->setTextColor(WHITE);
+      } else {
+        display->drawRoundRect(30, 10, 25, CHARACTER_HEIGHT, roundRectCorner, WHITE);
+      }
+      break;
+    
+    case 2:
+      if (buttonState) {
+        display->fillRoundRect(59, 10, 25, CHARACTER_HEIGHT, roundRectCorner, WHITE);
+        display->setTextColor(BLACK);
+        display->setCursor(63, 12);
+        display->print("1/4");
+        display->setTextColor(WHITE);
+      } else {
+        display->drawRoundRect(59, 10, 25, CHARACTER_HEIGHT, roundRectCorner, WHITE);
+      }
+      break;
+
+    case 3:
+      if (buttonState) {
+        display->fillRoundRect(89, 10, 25, CHARACTER_HEIGHT, roundRectCorner, WHITE);
+        display->setTextColor(BLACK);
+        display->setCursor(92, 12);
+        display->print("1/8");
+        display->setTextColor(WHITE);
+      } else {
+        display->drawRoundRect(89, 10, 25, CHARACTER_HEIGHT, roundRectCorner, WHITE);
+      }
+      break;
+
+    case 4:
+      if (buttonState) {
+        display->fillRoundRect(46, 20, 32, CHARACTER_HEIGHT, roundRectCorner, WHITE);
+        display->setTextColor(BLACK);
+        display->setCursor(43, 25);
+        display->print("1/8");
+        display->setTextColor(WHITE);
+      } else {
+        display->drawRoundRect(46, 20, 32, CHARACTER_HEIGHT, roundRectCorner, WHITE);
+      }
+      
+      break;  
+  }
+
+  display->display();
+}
+
 /* Menu for select driver stepper */
 const char *sMenu = "SELECT DRIVER";
 void startMenu(Adafruit_SSD1306 *display, uint8_t item, bool buttonState) {
   display->clearDisplay();
-  //display->drawRect(0, 0, 128, 32, WHITE);
-  display->setCursor(26, 0);
+
+  display->setCursor(28, 0);
   display->print(sMenu);
 
   display->setCursor(9, 17);
