@@ -15,12 +15,6 @@
 #define DT  3         // Alternate notation S1
 #define SW  4         // Alternate notation Key
 
-/*---------------------Speaker Settings Connection Pins----------------------*/
-//#define SPEAKER_ON    // Comment out if not use speaker
-#define SPEAKER_PIN         A3
-#define FREQUENCY_SP        1100
-#define DURATION_SP         140
-
 /*--------------------Button and Sensor Connection Pins----------------------*/
 #define BUTTON_RIGHT_PIN    A0
 #define BUTTON_LEFT_PIN     A1
