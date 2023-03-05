@@ -28,7 +28,7 @@
 #define OLED_RESET         -1
 #define DISPLAY_I2C_ADDR    0x3C
 #define DISPLAY_WIDTH       128
-#define DISPLAY_HEIGHT      32
+#define DISPLAY_HEIGHT      64
 
 /*----------------------Specification of Drivers A4988-----------------------*/
 #define T1_DURATION         10    // Duration pause time after Anable ON (min. 5 microSeconds)
