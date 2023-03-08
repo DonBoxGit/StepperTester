@@ -1,6 +1,6 @@
 #include "fastArduino.h"
 
-/*----------------------------pinMode function---------------------------------*/
+/*---------------------------| pinMode function |----------------------------*/
 void far::pinMode(uint8_t pin, uint8_t mode) {
   switch (mode) {
     case INPUT:
@@ -44,7 +44,7 @@ void far::pinMode(uint8_t pin, uint8_t mode) {
   }
 }
 
-/*-----------------------------digitalRead function----------------------------*/
+/*--------------------------| digitalRead function |-------------------------*/
 bool far::digitalRead(uint8_t pin) {
     bool state;
     if (pin < 8)       state = PIND & (1 << pin);
@@ -53,7 +53,7 @@ bool far::digitalRead(uint8_t pin) {
     return state;
 }
 
-/*---------------------------digitalWrite function-----------------------------*/
+/*------------------------| digitalWrite function |--------------------------*/
 void far::digitalWrite(uint8_t pin, bool state) {
     switch (pin) {   /* PWM disable */
       case 3:  TCCR2A &= ~(1 << COM2B1); break;
@@ -69,14 +69,14 @@ void far::digitalWrite(uint8_t pin, bool state) {
     else if (pin < 20) state ? PORTC |= (1 << (pin - 14)) : PORTC &= ~(1 << (pin - 14));
 }
 
-/*--------------------------digitalToggle function---------------------------*/
+/*------------------------| digitalToggle function |-------------------------*/
 void far::digitaToggle(uint8_t pin) {
     if (pin < 8)       PIND ^= (1 << pin);
     else if (pin < 14) PINB ^= (1 << (pin - 8));
     else if (pin < 20) PINC ^= (1 << (pin - 14));
 }
 
-/*-----------------------Uart class instead of Serial------------------------*/
+/*---------------------| Uart class instead of Serial |----------------------*/
 void Uart::begin(uint32_t baudrate) {
       uint16_t speed = (F_CPU / (8L * baudrate)) - 1;
       UBRR0 = speed;

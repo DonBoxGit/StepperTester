@@ -18,7 +18,7 @@ void digitalWrite(uint8_t pin, bool state);
 void digitaToggle(uint8_t pin);
 } /* far namespace */
 
-/*-----------------------Uart class instead of Serial------------------------*/
+/*---------------------| Uart class instead of Serial |----------------------*/
 class Uart /*: public Print */ {
   public:
     void begin(uint32_t baudrate);
