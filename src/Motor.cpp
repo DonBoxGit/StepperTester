@@ -88,6 +88,12 @@ void Motor::setDirection(Direction state) {
     }
 }
 
+void Motor::changeEnablePin(const uint8_t pin) {
+    enable_pin = pin;
+    far::pinMode(enable_pin, OUTPUT);
+    setEnable(EnableState::OFF);
+}
+
 void Motor::initMicrostepMode() {
     far::pinMode(MS1, OUTPUT);
     far::pinMode(MS2, OUTPUT);
