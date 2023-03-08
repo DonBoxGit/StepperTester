@@ -19,7 +19,7 @@ class Motor {
         ~Motor();
         static void init(void);
         static void initMicrostepMode(void);
-        void setEnablePin(const uint8_t);
+        void changeEnablePin(const uint8_t);
         void setMicrostep(uint8_t);
         void setEnable(EnableState);
         void setDirection(Direction);
