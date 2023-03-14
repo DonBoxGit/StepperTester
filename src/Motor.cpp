@@ -19,10 +19,10 @@ void Motor::init() {
     TCCR1A = 0x00;              
     TCCR1B = 0x00;              
     //OCR1A  = pulse;             // Quantity of Pulse for Compare with TCNT1(timer_counts)
-    TCCR1B |= (1 << WGM12);     // Set CTC Mode (reset by concurrence with TCNTn)
+    TCCR1B |= (1 << WGM12);     // Set CTC Mode (reset by coincidence with TCNTn)
     TCCR1B |= (1 << CS12);      // Setting the Prescaller to 256
     TCNT1 = 0x00;               // Reset the Counting Register
-    sei();                      
+    sei();
 }
 
 void Motor::run() {
@@ -91,7 +91,6 @@ void Motor::setDirection(Direction state) {
 void Motor::changeEnablePin(const uint8_t pin) {
     enable_pin = pin;
     far::pinMode(enable_pin, OUTPUT);
-    setEnable(EnableState::OFF);
 }
 
 void Motor::initMicrostepMode() {
