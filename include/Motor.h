@@ -38,17 +38,18 @@ class Motor {
         void run(void);
         void stop(void);
 
+    public:
+        const uint8_t step_pin;
+        volatile uint16_t steps = 0;
+
     private:
         bool enableState;
         bool dirState;
         uint8_t motorState;
-        const uint8_t step_pin;
         const uint8_t dir_pin;
-        uint8_t enable_pin;
+        const uint8_t enable_pin;
         uint8_t microstepMode = 1;
         volatile uint16_t pulse = 3000;
-    public:
-        volatile uint16_t steps = 0;
 };
 
 #endif /* _MOTOR_H_ */
