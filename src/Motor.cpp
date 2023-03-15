@@ -9,7 +9,7 @@ Motor::Motor (const uint8_t stp,
     far::pinMode(dir_pin,    OUTPUT);
     far::pinMode(enable_pin, OUTPUT);
     setEnable(EnableState::OFF);
-    motorState = static_cast<bool>(MotorState::STOP);
+    setMotorState(MotorState::STOP);
 }
 
 Motor::~Motor() {}
@@ -86,11 +86,6 @@ void Motor::setDirection(Direction state) {
             }
             break;
     }
-}
-
-void Motor::changeEnablePin(const uint8_t pin) {
-    enable_pin = pin;
-    far::pinMode(enable_pin, OUTPUT);
 }
 
 void Motor::initMicrostepMode() {
