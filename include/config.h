@@ -2,12 +2,16 @@
 #define _CONFIG_H_
 
 /*--------------------| Stepper Motor Connection Pins |---------------------*/
-#define STEP_PIN 6
-#define DIR_PIN  7
+/* Internal driver */
+#define STEP_PIN_INTERNAL 6
+#define DIR_PIN_INTERNAL  7
 #define ENBL_PIN_INTERNAL 5
+/* External driver */
+#define STEP_PIN_EXTERNAL 13
+#define DIR_PIN_EXTERNAL  17
 #define ENBL_PIN_EXTERNAL 9
 
-/* Pins for set microsteps need to define MICROSTEP_MODE_ENABLE */
+/*------|Pins for set microsteps need to define MICROSTEP_MODE_ENABLE |------*/
 #define MS1      20
 #define MS2      17
 #define MS3      13
@@ -39,11 +43,12 @@
 #define T3_TIME_COUNTS      3     // Time_Counts = Target_Time / Time_Resolution - 1
 
 /*---------| Specification of MITSUMI M42SP-7 and External Motors |----------*/
-#define MIN_PULSE               40
+#define MIN_PULSE               35
 #define STEP_ANGLE_INTERNAL     7.5F
 #define STEP_ANGLE_EXTERNAL     1.8F
 
 /*-------------------| Miscellaneous constants project |---------------------*/
-#define ONE_STEP_MEANDR     10
+#define OCRA1_INITIAL_VALUE 3000
+#define ONE_STEP_MEANDR     10    // Duration in ms
 
 #endif /* _CONFIG_H_ */
