@@ -170,6 +170,7 @@ void selectMenu(Adafruit_SSD1306 *display, uint8_t item, bool buttonState) {
   display->display();
 }
 
+/* Main items screen */
 void mainScreen(Adafruit_SSD1306 *display, Motor *motor, uint8_t item) {
   display->clearDisplay();
 
@@ -178,11 +179,27 @@ void mainScreen(Adafruit_SSD1306 *display, Motor *motor, uint8_t item) {
   display->print(sDriver[item]);
 
   /* Display steps */
-  display->setCursor(55, 25);
+  display->setCursor(55, 18);
   display->print(F("STEPS: "));
-  display->setCursor(92, 25);
+  display->setCursor(92, 18);
   display->print(motor->getSteps());
-
+  
+  /* Computing and print quantity of steps per second */
+  display->setCursor(0, 32);
+  display->print("Steps p/s: ");
+  display->setCursor(64, 32);
+  stepsPS = 1 / (TIMER_RESOLUTION * motor->getPulse() * 2);
+  display->print(stepsPS);
+  display->setCursor(0, 44);
+  display->print("Pulse: ");
+  /* Print pulse at the moment */
+  display->setCursor(42, 44);
+  display->print(motor->getPulse());
+  /* Computing and print revolutions per second */
+  display->setCursor(0, 56);
+  display->print("Rev. p/s: ");
+  display->print(stepsPS / stepsInRevolution(STEP_ANGLE_INTERNAL));
+  
   /* Display motor status */
   switch (motor->getMotorState()) {
     case static_cast<uint8_t>(MotorState::WORK):
@@ -245,17 +262,19 @@ void mainScreen(Adafruit_SSD1306 *display, Motor *motor, uint8_t item) {
           display->print("<<<STEP");
       } else {
         motor->setMotorState(MotorState::STOP);
+        display->setTextColor(BLACK);
+        display->setCursor(motorStatusCoordX + 8, motorStatusCoordY + 2);
+        display->print("STOP");
       }
       break;
   }
-  
+
   display->setTextColor(WHITE);
   display->display();
 }
 
 void velocityScreen(Adafruit_SSD1306 *display, Motor *motor) {
   display->clearDisplay();
-  //display->drawRect(0, 0, 128, 32, WHITE);
 
   /* Computing and print quantity of steps per second */
   display->setCursor(0, 0);
@@ -271,7 +290,7 @@ void velocityScreen(Adafruit_SSD1306 *display, Motor *motor) {
   /* Computing and print revolutions per second */
   display->setCursor(0, 24);
   display->print("Rev. p/s: ");
-  display->print(stepsPS / STEPS_IN_REVOLUTION);
+  display->print(stepsPS / stepsInRevolution(STEP_ANGLE_INTERNAL));
   
   display->display();
 }
