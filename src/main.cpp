@@ -14,8 +14,8 @@
 /* Display object pointer */
 Adafruit_SSD1306 *pDisplay = new Adafruit_SSD1306(DISPLAY_WIDTH, DISPLAY_HEIGHT,
                                                   &Wire, OLED_RESET);
-/* Motor object pointer */
-Motor *pMotor = new Motor(STEP_PIN, DIR_PIN, ENBL_PIN);
+/* Null pointer Motor object */
+Motor *pMotor = nullptr;
 
 /* Encoder initialization */
 EncButton<EB_TICK, DT, SLK, SW> encoder;
@@ -37,14 +37,18 @@ void isr() { encoder.tickISR(); }
 /* Internal interrupt for motor stepper driver control */
 ISR(TIMER1_COMPA_vect) {
     pMotor->refreshPulse();
-    far::digitalWrite(STEP_PIN, !far::digitalRead(STEP_PIN));
-    if(far::digitalRead(STEP_PIN)) ++pMotor->steps;
+    far::digitalWrite(pMotor->step_pin, !far::digitalRead(pMotor->step_pin));
+    if(far::digitalRead(pMotor->step_pin)) ++pMotor->steps;
 }
 
 void setup() {
   Serial.begin(9600);
   Motor::init();
+
+#ifdef MICROSTEP_MODE_ENABLE  
   Motor::initMicrostepMode();
+#endif
+
   /* Initialization of encoder and external interrupts */
   encoder.setEncType(0);  // Full step type encoder
   attachInterrupt(0, isr, CHANGE);
@@ -55,147 +59,148 @@ void setup() {
   pDisplay->setTextSize(1);
   pDisplay->setTextColor(WHITE);
   startMenu(pDisplay, 0, false);
-  //selectMenu(pDisplay, 0, false);
 }
 
 void loop() {
-  encoder.tick();
   static int8_t pos = 0;  // Position in menu
+  while (!encoder.press()) {
+    encoder.tick();
+    right_btn.tick();
+    left_btn.tick();
+    reset_btn.tick();
 
-  if (encoder.left()) {
-    //if(++pos > (driversArray - 1)) pos = driversArray - 1;
-    if(++pos > 1) pos = 0;
-    startMenu(pDisplay, pos, false);
-    //selectMenu(pDisplay, pos, false);
+    if (encoder.left() || left_btn.press()) {
+      if(++pos > 1) pos = 0;
+      startMenu(pDisplay, pos, false);
+    }
+    if (encoder.right() || right_btn.press()) {
+      if(--pos < 0) pos = 1;
+      startMenu(pDisplay, pos, false);
+    }
+    if (reset_btn.press()) {
+      break;
+    }
+  } /* End of startMenu */
+
+  startMenu(pDisplay, pos, true);
+  uint8_t id_driver = pos;
+  if (id_driver) {
+    pMotor = new Motor(STEP_PIN_EXTERNAL, DIR_PIN_EXTERNAL, ENBL_PIN_EXTERNAL);
+  } else if (!id_driver) {
+    pMotor = new Motor(STEP_PIN_INTERNAL, DIR_PIN_INTERNAL, ENBL_PIN_INTERNAL);
   }
+  _delay_ms(400);
+  
+  mainScreen(pDisplay, pMotor, id_driver);
+  pos = 0;
+  bool screenState = false; // State vision of main screen
+  Timer updateScreenRate(50);
 
-  if (encoder.right()) {
-    if(--pos < 0) pos = 1;
-    startMenu(pDisplay, pos, false);
-    //selectMenu(pDisplay, pos, false);
-  }
+  while (true) {
+    reset_btn.tick();
+    term_sw_1.tick();
+    term_sw_2.tick();
+    right_togle.tick();
+    left_togle.tick();
+    // if (!encoder.tick() && delayVelocityScreen.ready()) {  // <-!
+    //   screenState = true;
+    // }
 
-  if (encoder.press()) {
-    startMenu(pDisplay, pos, true);
-    //selectMenu(pDisplay, pos, true);
-    _delay_ms(400);
-    uint8_t id_driver = pos;
-    mainScreen(pDisplay, pMotor, id_driver);
-    pos = 0;
-    bool screenState = false; // State of main screen
-    
-    Timer updateScreenRate(50);
-    Timer delayVelocityScreen(1000);
+#ifdef MICROSTEP_MODE_ENABLE
+    if (encoder.press()) {
+      setMicrostepMenu(pDisplay, pos, false);
+      while (true) {
+        encoder.tick();
+        if (encoder.left()) {
+          if (++pos > 4) pos = 0;
+          setMicrostepMenu(pDisplay, pos, false);
+        }
+        if (encoder.right()) {
+          if (--pos < 0) pos = 4;
+          setMicrostepMenu(pDisplay, pos, false);
+        }
+        if (encoder.press()) {
+          setMicrostepMenu(pDisplay, pos, true);
+          _delay_ms(200);
+          mainScreen(pDisplay, pMotor, id_driver);
+          break;
+        }
+      }
+    }
+#endif /* MICROSTEP_MODE_ENABLE */
 
-    while (true) {
-      reset_btn.tick();
-      term_sw_1.tick();
-      term_sw_2.tick();
-      right_togle.tick();
-      left_togle.tick();
+    if (encoder.right()) {
+      computingCoeff(pMotor, coeff);
+      pMotor->updatePulse(coeff);
+      mainScreen(pDisplay, pMotor, id_driver);
+    }
 
-      if (!encoder.tick() && delayVelocityScreen.ready()) {  // <-!
+    if (encoder.left()) {
+      computingCoeff(pMotor, coeff);
+      if (pMotor->getPulse() > MIN_PULSE)
+        pMotor->updatePulse(-coeff);
+      else
+        pMotor->updatePulse(0);
+      mainScreen(pDisplay, pMotor, id_driver);
+    }
+
+    if (right_togle.press()) {
+        pMotor->setDirection(Direction::FORWARD);
+        pMotor->setEnable(EnableState::ON);
+        pMotor->execute(MotorState::WORK);
+        screenState = true;
+    } else if (right_togle.release()) {
+        pMotor->execute(MotorState::STOP);
+        pMotor->setEnable(EnableState::OFF);
+        screenState = false;
+        blinkMotorStatus.resetStatus();
+        mainScreen(pDisplay, pMotor, id_driver);
+    }
+
+    if (left_togle.press()) {
+        pMotor->setDirection(Direction::REVERSE);
+        pMotor->setEnable(EnableState::ON);
+        pMotor->execute(MotorState::WORK);
+        screenState = true;
+    } else if (left_togle.release()) {
+        pMotor->execute(MotorState::STOP);
+        pMotor->setEnable(EnableState::OFF);
+        screenState = false;
+        blinkMotorStatus.resetStatus();
+        mainScreen(pDisplay, pMotor, id_driver);
+    }
+      
+    if (!right_togle.state() && !left_togle.state()) {
+      right_btn.tick();
+      left_btn.tick();
+      if (left_btn.press()) {
+        pMotor->oneStep(Direction::REVERSE);
+        delayOneStepVision.resetCount();
         screenState = true;
       }
 
-      if (encoder.press()) {
-        setMicrostepMenu(pDisplay, pos, false);
-        while (true) {
-          encoder.tick();
-          if (encoder.left()) {
-            if (++pos > 4) pos = 0;
-            setMicrostepMenu(pDisplay, pos, false);
-          }
-          if (encoder.right()) {
-            if (--pos < 0) pos = 4;
-            setMicrostepMenu(pDisplay, pos, false);
-          }
-          if (encoder.press()) {
-            setMicrostepMenu(pDisplay, pos, true);
-            _delay_ms(200);
-            mainScreen(pDisplay, pMotor, id_driver);
-            break;
-          }
-        }
+      if (right_btn.press()) {
+        pMotor->oneStep(Direction::FORWARD);
+        delayOneStepVision.resetCount();
+        screenState = true;
       }
+    }
 
-      if (encoder.right()) {
-        computingCoeff(pMotor, coeff);
-        pMotor->updatePulse(coeff);
-        velocityScreen(pDisplay, pMotor);
-        screenState = false;
-        delayVelocityScreen.resetCount();
-      }
-
-      if (encoder.left()) {
-        computingCoeff(pMotor, coeff);
-        if (pMotor->getPulse() > MIN_PULSE)
-          pMotor->updatePulse(-coeff);
-        else
-          pMotor->updatePulse(0);
-        velocityScreen(pDisplay, pMotor);
-        screenState = false;
-        delayVelocityScreen.resetCount();
-      }
-      if (right_togle.press()) {
-          pMotor->setDirection(Direction::FORWARD);
-          pMotor->setEnable(EnableState::ON);
-          pMotor->execute(MotorState::WORK);
-          screenState = true;
-      } else if (right_togle.release()) {
-          pMotor->execute(MotorState::STOP);
-          pMotor->setEnable(EnableState::OFF);
-          screenState = false;
-          blinkMotorStatus.resetStatus();
-          mainScreen(pDisplay, pMotor, id_driver);
-      }
-
-      if (left_togle.press()) {
-          pMotor->setDirection(Direction::REVERSE);
-          pMotor->setEnable(EnableState::ON);
-          pMotor->execute(MotorState::WORK);
-          screenState = true;
-      } else if (left_togle.release()) {
-          pMotor->execute(MotorState::STOP);
-          pMotor->setEnable(EnableState::OFF);
-          screenState = false;
-          blinkMotorStatus.resetStatus();
-          mainScreen(pDisplay, pMotor, id_driver);
-      }
+    if (reset_btn.press()) {
+      pMotor->resetSteps();
+      mainScreen(pDisplay, pMotor, id_driver);
+    }
       
-      if (!right_togle.state() && !left_togle.state()) {
-        right_btn.tick();
-        left_btn.tick();
-        if (left_btn.press()) {
-          pMotor->oneStep(Direction::REVERSE);
-          screenState = true;
-          delayOneStepVision.resetCount();
-        } else if (right_btn.press()) {
-          pMotor->oneStep(Direction::FORWARD);
-          screenState = true;
-          delayOneStepVision.resetCount();
-        }
-      }
+    if (term_sw_1.press() || term_sw_2.press()) {
+      pMotor->execute(MotorState::STOP);
+      screenState  = true;
+    } else if (term_sw_1.release() || term_sw_2.release()) {
+      screenState = false;
+      mainScreen(pDisplay, pMotor, id_driver);
+    }
 
-      if (reset_btn.press()) {
-        pMotor->resetSteps();
-        mainScreen(pDisplay, pMotor, id_driver);
-      }
-      
-      if (term_sw_1.press() || term_sw_2.press()) {
-        pMotor->execute(MotorState::STOP);
-        screenState  = true;
-      } else if (term_sw_1.release() || term_sw_2.release()) {
-        screenState = false;
-        mainScreen(pDisplay, pMotor, id_driver);
-      }
-
-      if (screenState && updateScreenRate.ready()) {
-        mainScreen(pDisplay, pMotor, id_driver);
-        // if (!right_togle.state() && !left_togle.state()) {
-        //   screenState = false;
-        // }
-      }
+    if (screenState && updateScreenRate.ready()) {
+      mainScreen(pDisplay, pMotor, id_driver);
     }
   }
 }
