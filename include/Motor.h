@@ -10,11 +10,14 @@ enum class EnableState : bool { ON = false, OFF = true };
 enum class Direction   : bool { REVERSE = false, FORWARD = true };
 enum class MotorState  : uint8_t { STOP = 0, WORK = 1, STEP = 2 };
 
+const float timerResolution = 1.0F / (F_CPU / 256);
+
 class Motor {
     public:
         Motor(const uint8_t stp,
               const uint8_t dir,
-              const uint8_t enb);
+              const uint8_t enb,
+              const float ang);
 
         ~Motor();
         static void init(void);
@@ -30,6 +33,8 @@ class Motor {
         bool getDirection(void);
         uint16_t getSteps(void);
         uint16_t getPulse(void);
+        float getStepsPerSecond(void);
+        float getRevolutionPerSecond(void);
         void refreshPulse(void);
         void oneStep(Direction);
         void execute(MotorState);
@@ -49,7 +54,8 @@ class Motor {
         const uint8_t dir_pin;
         const uint8_t enable_pin;
         uint8_t microstepMode = 1;
-        volatile uint16_t pulse = 3000;
+        volatile uint16_t pulse = OCRA1_INITIAL_VALUE;
+        const float angle;
 };
 
 #endif /* _MOTOR_H_ */

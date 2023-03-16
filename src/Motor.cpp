@@ -2,9 +2,11 @@
 
 Motor::Motor (const uint8_t stp,
               const uint8_t dir,
-              const uint8_t enb) : step_pin  (stp),
-                                   dir_pin   (dir),
-                                   enable_pin(enb) {
+              const uint8_t enb,
+              const float ang) : step_pin  (stp),
+                                 dir_pin   (dir),
+                                 enable_pin(enb),
+                                 angle     (ang) {
     far::pinMode(step_pin,   OUTPUT);
     far::pinMode(dir_pin,    OUTPUT);
     far::pinMode(enable_pin, OUTPUT);
@@ -189,4 +191,12 @@ void Motor::oneStep(Direction state) {
 
 void Motor::setMotorState(MotorState state) {
     motorState = static_cast<uint8_t>(state);
+}
+
+float Motor::getStepsPerSecond() {
+    return (1 / (timerResolution * getPulse()));
+}
+
+float Motor::getRevolutionPerSecond() {
+    return (getStepsPerSecond() / (360 / angle));
 }
