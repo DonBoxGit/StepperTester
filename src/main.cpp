@@ -85,9 +85,11 @@ void loop() {
   startMenu(pDisplay, pos, true);
   uint8_t id_driver = pos;
   if (id_driver) {
-    pMotor = new Motor(STEP_PIN_EXTERNAL, DIR_PIN_EXTERNAL, ENBL_PIN_EXTERNAL);
+    pMotor = new Motor(STEP_PIN_EXTERNAL, DIR_PIN_EXTERNAL,
+                       ENBL_PIN_EXTERNAL, STEP_ANGLE_EXTERNAL);
   } else if (!id_driver) {
-    pMotor = new Motor(STEP_PIN_INTERNAL, DIR_PIN_INTERNAL, ENBL_PIN_INTERNAL);
+    pMotor = new Motor(STEP_PIN_INTERNAL, DIR_PIN_INTERNAL,
+                       ENBL_PIN_INTERNAL, STEP_ANGLE_INTERNAL);
   }
   _delay_ms(400);
   
