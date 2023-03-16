@@ -194,7 +194,7 @@ void Motor::setMotorState(MotorState state) {
 }
 
 float Motor::getStepsPerSecond() {
-    return (1 / (timerResolution * getPulse()));
+    return (1 / (timerResolution * getPulse() * 2));
 }
 
 float Motor::getRevolutionPerSecond() {
