@@ -188,8 +188,7 @@ void mainScreen(Adafruit_SSD1306 *display, Motor *motor, uint8_t item) {
   display->setCursor(0, 32);
   display->print("Steps p/s: ");
   display->setCursor(64, 32);
-  stepsPS = 1 / (TIMER_RESOLUTION * motor->getPulse() * 2);
-  display->print(stepsPS);
+  display->print(motor->getStepsPerSecond());
   display->setCursor(0, 44);
   display->print("Pulse: ");
   /* Print pulse at the moment */
@@ -198,7 +197,7 @@ void mainScreen(Adafruit_SSD1306 *display, Motor *motor, uint8_t item) {
   /* Computing and print revolutions per second */
   display->setCursor(0, 56);
   display->print("Rev. p/s: ");
-  display->print(stepsPS / stepsInRevolution(STEP_ANGLE_INTERNAL));
+  display->print(motor->getRevolutionPerSecond());
   
   /* Display motor status */
   switch (motor->getMotorState()) {
@@ -280,8 +279,7 @@ void velocityScreen(Adafruit_SSD1306 *display, Motor *motor) {
   display->setCursor(0, 0);
   display->print("Steps p/s: ");
   display->setCursor(64, 0);
-  stepsPS = 1 / (TIMER_RESOLUTION * motor->getPulse() * 2);
-  display->print(stepsPS);
+  display->print(motor->getStepsPerSecond());
   display->setCursor(0, 12);
   display->print("Pulse: ");
   /* Print pulse at the moment */
@@ -290,7 +288,7 @@ void velocityScreen(Adafruit_SSD1306 *display, Motor *motor) {
   /* Computing and print revolutions per second */
   display->setCursor(0, 24);
   display->print("Rev. p/s: ");
-  display->print(stepsPS / stepsInRevolution(STEP_ANGLE_INTERNAL));
+  display->print(motor->getRevolutionPerSecond());
   
   display->display();
 }
