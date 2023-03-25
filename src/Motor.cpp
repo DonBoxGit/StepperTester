@@ -139,37 +139,14 @@ void Motor::setMicrostep(uint8_t mode) {
     }
 }
 
-bool Motor::getEnable() {
-    return !enableState;
-}
-
-bool Motor::getDirection() {
-    return dirState;
-}
-
-void Motor::resetSteps() {
-    steps = 0;
-}
-
-uint16_t Motor::getSteps() {
-    return steps;
-}
-
-void Motor::updatePulse(int16_t value) {
-    pulse += value;
-}
-
-void Motor::refreshPulse() {
-       OCR1A = pulse;
-}
-
-uint16_t Motor::getPulse() {
-    return pulse;
-}
-
-uint8_t Motor::getMotorState() {
-    return motorState;
-}
+bool Motor::getEnable () { return !enableState; }
+void Motor::resetSteps() { steps = 0; }
+uint16_t Motor::getSteps() { return steps; }
+bool Motor::getDirection() { return dirState; }
+void Motor::refreshPulse() { OCR1A = pulse; }
+uint16_t Motor::getPulse() { return pulse; }
+void Motor::updatePulse(int16_t value) { pulse += value; }
+uint8_t Motor::getMotorState() { return motorState; }
 
 void Motor::oneStep(Direction state) {
     motorState = static_cast<uint8_t>(MotorState::STEP);
