@@ -48,7 +48,7 @@
 #define STEP_ANGLE_EXTERNAL     1.8F
 
 /*-------------------| Miscellaneous constants project |---------------------*/
-#define UPDATE_SCREEN_RATE  50    // Interval in ms
+#define UPDATE_SCREEN_RATE  50    // Screen refresh rate in ms
 #define OCRA1_INITIAL_VALUE 3000
 #define ONE_STEP_MEANDR     10    // Duration in ms
 
