@@ -96,7 +96,7 @@ void loop() {
   mainScreen(pDisplay, pMotor, id_driver);
   pos = 0;
   bool screenState = false; // State vision of main screen
-  Timer updateScreenRate(50);
+  Timer updateScreenRate(UPDATE_SCREEN_RATE);
 
   while (true) {
     reset_btn.tick();
@@ -178,13 +178,13 @@ void loop() {
       if (left_btn.press()) {
         pMotor->oneStep(Direction::REVERSE);
         delayOneStepVision.resetCount();
-        screenState = true;
+        screenState  = true;
       }
 
       if (right_btn.press()) {
         pMotor->oneStep(Direction::FORWARD);
         delayOneStepVision.resetCount();
-        screenState = true;
+        screenState  = true;
       }
     }
 
