@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 
-/*-------------------------------Class Timer---------------------------------*/
+/*-----------------------------| Class Timer |-------------------------------*/
 class Timer {
   public:
     Timer(uint16_t period = 1000);
@@ -18,7 +18,7 @@ class Timer {
     uint16_t _period;
 };
 
-/*--------------------------------Class Blink--------------------------------*/
+/*------------------------------| Class Blink |------------------------------*/
 class Blink : public Timer {
   public:
     Blink(uint16_t period = 500);

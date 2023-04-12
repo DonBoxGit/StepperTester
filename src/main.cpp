@@ -104,9 +104,6 @@ void loop() {
     term_sw_2.tick();
     right_togle.tick();
     left_togle.tick();
-    // if (!encoder.tick() && delayVelocityScreen.ready()) {  // <-!
-    //   screenState = true;
-    // }
 
 #ifdef MICROSTEP_MODE_ENABLE
     if (encoder.press()) {

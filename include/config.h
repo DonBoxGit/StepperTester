@@ -11,7 +11,7 @@
 #define DIR_PIN_EXTERNAL  17
 #define ENBL_PIN_EXTERNAL 9
 
-/*------|Pins for set microsteps need to define MICROSTEP_MODE_ENABLE |------*/
+/*-----| Pins for set microsteps need to define MICROSTEP_MODE_ENABLE |------*/
 #define MS1      20
 #define MS2      17
 #define MS3      13
@@ -37,10 +37,10 @@
 #define DISPLAY_HEIGHT      64
 
 /*--------------------| Specification of Drivers A4988 |---------------------*/
-#define T1_DURATION         10    // Duration pause time after Anable ON (min. 5 microSeconds)
-#define T2_DURATION         10    // Duration pause time after Direction Change (min. 5 microSeconds)
-#define T3_PULSE_WIDTH      5     // Duration time click pulse width (min. 2.5 microSeconds)
-#define T3_TIME_COUNTS      3     // Time_Counts = Target_Time / Time_Resolution - 1
+#define T1_DURATION     10 // Duration pause time after Anable ON (min. 5 microSeconds)
+#define T2_DURATION     10 // Duration pause time after Direction Change (min. 5 microSeconds)
+#define T3_PULSE_WIDTH  5  // Duration time click pulse width (min. 2.5 microSeconds)
+#define T3_TIME_COUNTS  3  // Time_Counts = Target_Time / Time_Resolution - 1
 
 /*---------| Specification of MITSUMI M42SP-7 and External Motors |----------*/
 #define MIN_PULSE               35
@@ -49,7 +49,7 @@
 
 /*-------------------| Miscellaneous constants project |---------------------*/
 #define UPDATE_SCREEN_RATE  50    // Screen refresh rate in ms
-#define OCRA1_INITIAL_VALUE 3000
+#define OCRA1_INITIAL_VALUE 3000  // OCR1A register start value
 #define ONE_STEP_MEANDR     10    // Duration in ms
 
 #endif /* _CONFIG_H_ */
