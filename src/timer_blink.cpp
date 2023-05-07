@@ -1,6 +1,6 @@
 #include "timer_blink.h"
 
-/*-------------------------------Class Timer---------------------------------*/
+/*-----------------------------| Class Timer |-------------------------------*/
 Timer::Timer(uint16_t period)  : _period(period) {}
 
 Timer::~Timer() {}
@@ -21,7 +21,7 @@ void Timer::resetCount() {
   _tmr = millis();
 }
 
-/*-------------------------------Class Blink---------------------------------*/
+/*-----------------------------| Class Blink |-------------------------------*/
 Blink::Blink(uint16_t period) : Timer(period) {}
   
 Blink::~Blink() {}
