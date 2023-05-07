@@ -41,4 +41,4 @@ void setMicrostepMenu(Adafruit_SSD1306 *display, uint8_t item, bool buutonState)
 void computingCoeff(Motor *motor, uint8_t &incCoeff);
 uint8_t calcCenter(uint8_t sLength);
 
-#endif /* _DEVICE_MENU_H_*/
+#endif /* _DEVICE_MENU_H_ */
