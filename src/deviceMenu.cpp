@@ -10,7 +10,6 @@ float stepsPS = 0.0;
 /* Draw microstep function */
 void setMicrostepMenu(Adafruit_SSD1306 *display, uint8_t item, bool buttonState) {
   display->clearDisplay();
-  //display->drawRect(0, 0, 128, 32, WHITE);
 
   display->setCursor(16, 0);
   display->print("SELECT MICROSTEP");

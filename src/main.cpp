@@ -178,13 +178,13 @@ void loop() {
       if (left_btn.press()) {
         pMotor->oneStep(Direction::REVERSE);
         delayOneStepVision.resetCount();
-        screenState  = true;
+        screenState = true;
       }
 
       if (right_btn.press()) {
         pMotor->oneStep(Direction::FORWARD);
         delayOneStepVision.resetCount();
-        screenState  = true;
+        screenState = true;
       }
     }
 
