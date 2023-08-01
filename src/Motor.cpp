@@ -151,7 +151,7 @@ uint8_t Motor::getMotorState() { return motorState; }
 void Motor::oneStep(Direction state) {
     motorState = static_cast<uint8_t>(MotorState::STEP);
     if (far::digitalRead(enable_pin))
-        far::digitalWrite(enable_pin, 0);   // If will use EnableState::ON constantly, then remove it
+        far::digitalWrite(enable_pin, 0);   // If will use EnableState::ON constantly, then remove it if
 
     dirState = static_cast<bool>(state);
     if (far::digitalRead(dir_pin) != dirState)
