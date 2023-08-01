@@ -2,11 +2,12 @@
 #define _CONFIG_H_
 
 /*--------------------| Stepper Motor Connection Pins |---------------------*/
-/* Internal driver */
+/* Internal driver pins */
 #define STEP_PIN_INTERNAL 6
 #define DIR_PIN_INTERNAL  7
 #define ENBL_PIN_INTERNAL 5
-/* External driver */
+
+/* External driver pins */
 #define STEP_PIN_EXTERNAL 13
 #define DIR_PIN_EXTERNAL  17
 #define ENBL_PIN_EXTERNAL 9
