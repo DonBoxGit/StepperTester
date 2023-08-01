@@ -91,35 +91,35 @@ const char *sMenu = "SELECT DRIVER";
 void startMenu(Adafruit_SSD1306 *display, uint8_t item, bool buttonState) {
   display->clearDisplay();
 
-  display->setCursor(28, 0);
+  display->setCursor(26, 5);
   display->print(sMenu);
 
-  display->setCursor(9, 17);
+  display->setCursor(9, 30);
   display->print("INTERNAL");
-  display->setCursor(72, 17);
+  display->setCursor(72, 30);
   display->print("EXTERNAL");
 
   switch (item) {
     case 0:
       if (buttonState) {
-        display->fillRoundRect(6, 15, 54, CHARACTER_HEIGHT, roundRectCorner, WHITE);
+        display->fillRoundRect(6, 26, 54, RECTANGLE_HEIGHT, roundRectCorner, WHITE);
         display->setTextColor(BLACK);
-        display->setCursor(9, 17);
+        display->setCursor(9, 30);
         display->print("INTERNAL");
         display->setTextColor(WHITE);
       } else {
-        display->drawRoundRect(6, 15, 54, CHARACTER_HEIGHT, roundRectCorner, WHITE);
+        display->drawRoundRect(6, 26, 54, RECTANGLE_HEIGHT, roundRectCorner, WHITE);
       }
       break;
     case 1:
       if (buttonState) {
-        display->fillRoundRect(68, 15, 54, CHARACTER_HEIGHT, roundRectCorner, WHITE);
+        display->fillRoundRect(68, 26, 54, RECTANGLE_HEIGHT, roundRectCorner, WHITE);
         display->setTextColor(BLACK);
-        display->setCursor(72, 17);
+        display->setCursor(72, 30);
         display->print("EXTERNAL");
         display->setTextColor(WHITE);
       } else {
-        display->drawRoundRect(68, 15, 54, CHARACTER_HEIGHT, roundRectCorner, WHITE);
+        display->drawRoundRect(68, 26, 54, RECTANGLE_HEIGHT, roundRectCorner, WHITE);
       }
         
       break;
@@ -175,7 +175,8 @@ void mainScreen(Adafruit_SSD1306 *display, Motor *motor, uint8_t item) {
   display->clearDisplay();
 
   /* Display model of drivers */
-  display->setCursor(calcCenter(strlen(sDriver[item])), 0);
+  display->setCursor(18, 5);
+  display->print("DRIVER: ");
   display->print(sDriver[item]);
 
   /* Display steps */
@@ -198,7 +199,7 @@ void mainScreen(Adafruit_SSD1306 *display, Motor *motor, uint8_t item) {
   display->setCursor(0, 56);
   display->print("Rev. p/s: ");
   display->print(motor->getRevolutionPerSecond());
-  
+
   /* Display motor status */
   switch (motor->getMotorState()) {
     case static_cast<uint8_t>(MotorState::WORK):

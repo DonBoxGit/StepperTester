@@ -14,12 +14,13 @@ extern uint8_t coeff;
 extern Blink blinkMotorStatus;
 extern Timer delayOneStepVision;
 
-#define CHARACTER_WIDTH 7
-#define CHARACTER_HEIGHT 11
+#define RECTANGLE_HEIGHT    15
+#define CHARACTER_WIDTH     7
+#define CHARACTER_HEIGHT    11
 
 /* Motor status rectangle property */
 #define motorStatusCoordX 1
-#define motorStatusCoordY 14 // 21
+#define motorStatusCoordY 17 // 21
 #define rectStatusWidth 46
 #define roundRectCorner 3
 
