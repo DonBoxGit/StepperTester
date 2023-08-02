@@ -9,6 +9,13 @@
 enum class EnableState : bool { ON = false, OFF = true };
 enum class Direction   : bool { REVERSE = false, FORWARD = true };
 enum class MotorState  : uint8_t { STOP = 0, WORK = 1, STEP = 2 };
+enum class MicroStepMode : uint8_t {
+    WHOLE_STEP = 0,
+    HALF_STEP,
+    ONE_FOURTH_STEP,
+    ONE_EIGHTH_STEP,
+    ONE_SIXTEENTH_STEP
+};
 
 const float timerResolution = 1.0F / (F_CPU / 256);
 
@@ -20,9 +27,17 @@ class Motor {
               const float ang);
 
         ~Motor();
+        /* Initializing Timer/Counter - 1 for generate meandr. */
         static void init(void);
-        static void initMicrostepMode(void);
-        void setMicrostep(uint8_t);
+
+        /* Initializing microstep mode of driver. */
+        void initMicrostepMode(void);
+
+        /// @brief Set microstep of driver.
+        /// @param mode Enum of microstep modes.
+        /// @note MicroStepMode::WHOLE_STEP by default.
+        void setMicrostep(MicroStepMode);
+        
         void setEnable(EnableState);
         void setDirection(Direction);
         void setMotorState(MotorState);
@@ -53,7 +68,7 @@ class Motor {
         uint8_t motorState;
         const uint8_t dir_pin;
         const uint8_t enable_pin;
-        uint8_t microstepMode = 1;
+        MicroStepMode  microstepMode;
         volatile uint16_t pulse = OCRA1_INITIAL_VALUE;
         const float angle;
 };
