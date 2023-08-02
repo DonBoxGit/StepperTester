@@ -95,43 +95,38 @@ void Motor::initMicrostepMode() {
     far::pinMode(MS2, OUTPUT);
     far::pinMode(MS3, OUTPUT);
 
-    far::digitalWrite(MS1, 0);
-    far::digitalWrite(MS2, 0);
-    far::digitalWrite(MS2, 0);
+    /* Set whole step of microstep mode */
+    setMicrostep(MicroStepMode::WHOLE_STEP);
 }
 
-void Motor::setMicrostep(uint8_t mode) {
+void Motor::setMicrostep(MicroStepMode  mode) {
+    microstepMode = mode;
     switch (mode) {
-        case 1:         // Whole step
-            microstepMode = 1;
+        case MicroStepMode::WHOLE_STEP:
             far::digitalWrite(MS1, 0);
             far::digitalWrite(MS2, 0);
             far::digitalWrite(MS2, 0);
             break;
         
-        case 12:        // Half step
-            microstepMode = 12;
+        case MicroStepMode::HALF_STEP:
             far::digitalWrite(MS1, 1);
             far::digitalWrite(MS2, 0);
             far::digitalWrite(MS2, 0);
             break;
         
-        case 14:        // 1/4 step
-            microstepMode = 14;
+        case MicroStepMode::ONE_FOURTH_STEP:
             far::digitalWrite(MS1, 0);
             far::digitalWrite(MS2, 1);
             far::digitalWrite(MS2, 0);
             break;
 
-        case 18:        // 1/8 step
-            microstepMode = 18;
+        case MicroStepMode::ONE_EIGHTH_STEP:
             far::digitalWrite(MS1, 1);
             far::digitalWrite(MS2, 1);
             far::digitalWrite(MS2, 0);
             break;
 
-        case 116:       // 1/16 step
-            microstepMode = 116;
+        case MicroStepMode::ONE_SIXTEENTH_STEP:
             far::digitalWrite(MS1, 1);
             far::digitalWrite(MS2, 1);
             far::digitalWrite(MS2, 1);
