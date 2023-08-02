@@ -95,7 +95,7 @@ void loop() {
                        ENBL_PIN_INTERNAL, STEP_ANGLE_INTERNAL);
   }
   _delay_ms(400);
-  
+
   mainScreen(pDisplay, pMotor, id_driver);
   pos = 0;
   bool screenState = false; // State vision of main screen
