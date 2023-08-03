@@ -33,12 +33,17 @@ class Motor {
         /* Initializing microstep mode of driver. */
         static void initMicrostepMode(void);
 
-        /// @brief Set microstep of driver.
-        /// @param mode Enum of microstep modes.
+        /// @brief Setup microstep modes of driver.
+        /// @param mode The modes of setMicroStep enum.
         /// @note MicroStepMode::WHOLE_STEP by default.
         void setMicrostep(MicroStepMode);
         
+        /// @brief Set driver ON/OFF signal.
+        /// @param state The state of EnableState enum.
+        /// @note EnableState::ON - Enable,
+        /// @note EnableState::OFF - Disable.
         void setEnable(EnableState);
+
         void setDirection(Direction);
         void setMotorState(MotorState);
         void updatePulse(int16_t);

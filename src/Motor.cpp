@@ -20,7 +20,7 @@ void Motor::init() {
     cli();                      
     TCCR1A = 0x00;              
     TCCR1B = 0x00;              
-    //OCR1A  = pulse;             // Quantity of Pulse for Compare with TCNT1(timer_counts)
+    //OCR1A  = pulse;           // Quantity of Pulse for Compare with TCNT1(timer_counts)
     TCCR1B |= (1 << WGM12);     // Set CTC Mode (reset by coincidence with TCNTn)
     TCCR1B |= (1 << CS12);      // Setting the Prescaller to 256
     TCNT1 = 0x00;               // Reset the Counting Register
@@ -95,13 +95,13 @@ void Motor::initMicrostepMode() {
     far::pinMode(MS2, OUTPUT);
     far::pinMode(MS3, OUTPUT);
 
-    /* Set whole step of microstep mode */
+    /* Set whole step mode */
     far::digitalWrite(MS1, 0);
     far::digitalWrite(MS2, 0);
     far::digitalWrite(MS2, 0);
 }
 
-void Motor::setMicrostep(MicroStepMode  mode) {
+void Motor::setMicrostep(MicroStepMode mode) {
     microstepMode = mode;
     switch (mode) {
         case MicroStepMode::WHOLE_STEP:
