@@ -31,7 +31,7 @@ class Motor {
         static void init(void);
 
         /* Initializing microstep mode of driver. */
-        void initMicrostepMode(void);
+        static void initMicrostepMode(void);
 
         /// @brief Set microstep of driver.
         /// @param mode Enum of microstep modes.

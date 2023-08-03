@@ -96,7 +96,9 @@ void Motor::initMicrostepMode() {
     far::pinMode(MS3, OUTPUT);
 
     /* Set whole step of microstep mode */
-    setMicrostep(MicroStepMode::WHOLE_STEP);
+    far::digitalWrite(MS1, 0);
+    far::digitalWrite(MS2, 0);
+    far::digitalWrite(MS2, 0);
 }
 
 void Motor::setMicrostep(MicroStepMode  mode) {
