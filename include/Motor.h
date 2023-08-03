@@ -17,7 +17,8 @@ enum class MicroStepMode : uint8_t {
     ONE_SIXTEENTH_STEP
 };
 
-const float timerResolution = 1.0F / (F_CPU / 256);
+#define PRESCALER 256
+const float timerResolution = 1.0F / (F_CPU / PRESCALER);
 
 class Motor {
     public:
