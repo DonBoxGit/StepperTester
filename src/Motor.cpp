@@ -156,9 +156,9 @@ void Motor::oneStep(Direction state) {
 
     _delay_us(T2_DURATION);
     far::digitalWrite(step_pin, 1);
-    _delay_ms(ONE_STEP_MEANDR);
+    _delay_ms(ONE_STEP_HALF_MEANDR);
     far::digitalWrite(step_pin, 0);
-    _delay_ms(ONE_STEP_MEANDR);
+    _delay_ms(ONE_STEP_HALF_MEANDR);
 
     ++steps;
 }

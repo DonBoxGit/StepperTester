@@ -39,25 +39,71 @@ class Motor {
         /// @note MicroStepMode::WHOLE_STEP by default.
         void setMicrostep(MicroStepMode);
         
-        /// @brief Set driver ON/OFF signal.
+        /// @brief Set driver ON/OFF Enable signal.
         /// @param state The state of EnableState enum.
         /// @note EnableState::ON - Enable,
         /// @note EnableState::OFF - Disable.
         void setEnable(EnableState);
 
+        /// @brief Setting the direction of rotation of the stepper motor.
+        /// @param state The state of Direction enum.
+        /// @note Direction::FORWARD - CW rotation,
+        /// @note Direction::REVERSE - CCW rotation.
         void setDirection(Direction);
+
+        /// @brief Setting the stepper motor state.
+        /// @param state The state of MotorState enum.
+        /// @note MotorState::WORK - The motor is rotating,
+        /// @note MotorState::STOP - The motor is stopped,
+        /// @note MotorState::STEP - The motor have one-step mode.
         void setMotorState(MotorState);
+
+        /// @brief Changing a pulse variable. 
+        /// @param value 
+        /// @note The higher the value, the lower the rotation motor speed.
         void updatePulse(int16_t);
+
+        /* Reset the steps counter */
         void resetSteps(void);
+
+        /// @brief Get the Enable status of motor.
+        /// @param void
+        /// @return true - Enable ON, false - Enable OFF.
         bool getEnable(void);
+
+        /// @brief Get the Motor status state.
+        /// @param void
+        /// @return static_cast<uint8_t>(MotorState).
         uint8_t getMotorState(void);
+
+        /// @brief Get the motor direction.
+        /// @param void
+        /// @return true - forward, false - reverse.
         bool getDirection(void);
+
+        /// @brief Get the number of steps.
         uint16_t getSteps(void);
+
+        /// @brief Get the value of pulse.
         uint16_t getPulse(void);
+
+        /// @brief Get the steps per second.
         float getStepsPerSecond(void);
+
+        /// @brief Get revolution per second.
         float getRevolutionPerSecond(void);
+
+        /// @brief Update the OCR1A register value. 
         void refreshPulse(void);
+
+        /// @brief Take one step.
+        /// @param state The state of Direction enum.
+        /// @note Direction::FORWARD - CW rotation,
+        /// @note Direction::REVERSE - CCW rotation.
         void oneStep(Direction);
+
+        /// @brief Perform the specified actions.
+        /// @param state The state of MotorState enum.
         void execute(MotorState);
 
     private:
@@ -74,7 +120,7 @@ class Motor {
         uint8_t motorState;
         const uint8_t dir_pin;
         const uint8_t enable_pin;
-        MicroStepMode  microstepMode;
+        MicroStepMode microstepMode;
         volatile uint16_t pulse = OCRA1_INITIAL_VALUE;
         const float angle;
 };
