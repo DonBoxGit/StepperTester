@@ -46,9 +46,15 @@ ISR(TIMER1_COMPA_vect) {
 
 void setup() {
   Serial.begin(9600);
+  float angleStep;
+  if (!EEPROM.get(IN_DSA_ADDR, angleStep))
+    EEPROM.put(IN_DSA_ADDR, STEP_ANGLE_INTERNAL);
+  if (!EEPROM.get(EX_DSA_ADDR, angleStep))
+    EEPROM.put(EX_DSA_ADDR, STEP_ANGLE_EXTERNAL);
+
   Motor::init();
 
-#ifdef MICROSTEP_MODE_ENABLE  
+#ifdef MICROSTEP_MODE_ENABLE
   Motor::initMicrostepMode();
 #endif
 
