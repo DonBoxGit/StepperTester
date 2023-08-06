@@ -6,6 +6,7 @@
 #include "Motor.h"
 #include "fastArduino.h"
 #include <EncButton.h>
+#include <EEPROM.h>
 #include "deviceMenu.h"
 
 #endif /* _MAIN_H_ */
