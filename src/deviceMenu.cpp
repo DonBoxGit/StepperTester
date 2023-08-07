@@ -170,13 +170,13 @@ void selectMenu(Adafruit_SSD1306 *display, uint8_t item, bool buttonState) {
 }
 
 /* Main items screen */
-void mainScreen(Adafruit_SSD1306 *display, Motor *motor, uint8_t item) {
+void mainScreen(Adafruit_SSD1306 *display, Motor *motor, uint8_t *item) {
   display->clearDisplay();
-
+  display->drawRect(0, 0, 128, 64, WHITE);
   /* Display model of drivers */
   display->setCursor(18, 5);
   display->print("DRIVER: ");
-  display->print(sDriver[item]);
+  display->print(sDriver[*item]);
 
   /* Display steps */
   display->setCursor(55, 18);
@@ -191,13 +191,20 @@ void mainScreen(Adafruit_SSD1306 *display, Motor *motor, uint8_t item) {
   display->print(motor->getStepsPerSecond());
   display->setCursor(0, 44);
   display->print("Pulse: ");
+
   /* Print pulse at the moment */
   display->setCursor(42, 44);
   display->print(motor->getPulse());
+
   /* Computing and print revolutions per second */
   display->setCursor(0, 56);
   display->print("Rev. p/s: ");
   display->print(motor->getRevolutionPerSecond());
+
+  /* Print angle of step */
+  display->setCursor(100, 49);
+  display->drawRoundRect(94, 43, 30, 18, roundRectCorner, WHITE);
+  display->print(motor->getAngle(), 1);
 
   /* Display motor status */
   switch (motor->getMotorState()) {

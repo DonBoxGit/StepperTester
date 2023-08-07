@@ -36,7 +36,7 @@ extern const uint8_t driversArray;
 /* Menu function and screen draw */
 void startMenu(Adafruit_SSD1306 *display, uint8_t item, bool buttonState);
 void selectMenu(Adafruit_SSD1306 *display, uint8_t item, bool buttonState);
-void mainScreen(Adafruit_SSD1306 *display, Motor *motor, uint8_t item);
+void mainScreen(Adafruit_SSD1306 *display, Motor *motor, uint8_t *item);
 void velocityScreen(Adafruit_SSD1306 *display, Motor *motor);
 void setMicrostepMenu(Adafruit_SSD1306 *display, uint8_t item, bool buutonState);
 void computingCoeff(Motor *motor, uint8_t &incCoeff);
