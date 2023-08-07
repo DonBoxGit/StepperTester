@@ -102,6 +102,9 @@ class Motor {
         /// @note Direction::REVERSE - CCW rotation.
         void oneStep(Direction);
 
+        /// @brief Get the angle of step.
+        float getAngle(void);
+
         /// @brief Perform the specified actions.
         /// @param state The state of MotorState enum.
         void execute(MotorState);

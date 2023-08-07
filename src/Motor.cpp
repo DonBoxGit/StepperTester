@@ -144,6 +144,7 @@ void Motor::refreshPulse() { OCR1A = pulse; }
 uint16_t Motor::getPulse() { return pulse; }
 void Motor::updatePulse(int16_t value) { pulse += value; }
 uint8_t Motor::getMotorState() { return motorState; }
+float Motor::getAngle() { return angle; }
 
 void Motor::oneStep(Direction state) {
     motorState = static_cast<uint8_t>(MotorState::STEP);
