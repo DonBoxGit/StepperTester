@@ -52,7 +52,8 @@
 #define UPDATE_SCREEN_RATE    50    // Screen refresh rate in ms
 #define OCRA1_INITIAL_VALUE   3000  // OCR1A register start value
 #define ONE_STEP_HALF_MEANDR  10    // Duration in ms
-#define IN_DSA_ADDR           0x00  // Value angle address of internal driver
-#define EX_DSA_ADDR           0x04  // Value angle address of external driver
+#define MAX_ANGLE             25    // Measured in degree
+#define IN_ANGLE_ADDR         0x00  // Value angle address of internal driver
+#define EX_ANGLE_ADDR         0x04  // Value angle address of external driver
 
 #endif /* _CONFIG_H_ */
