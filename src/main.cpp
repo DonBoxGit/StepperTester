@@ -46,11 +46,22 @@ ISR(TIMER1_COMPA_vect) {
 
 void setup() {
   Serial.begin(9600);
-  float angleStep;
-  if (!EEPROM.get(IN_DSA_ADDR, angleStep))
-    EEPROM.put(IN_DSA_ADDR, STEP_ANGLE_INTERNAL);
-  if (!EEPROM.get(EX_DSA_ADDR, angleStep))
-    EEPROM.put(EX_DSA_ADDR, STEP_ANGLE_EXTERNAL);
+
+  /* Initializing step angles in EEPROM */
+  float angleStepVal;
+  EEPROM.get(IN_ANGLE_ADDR, angleStepVal);
+  if (!angleStepVal || angleStepVal < 0 || angleStepVal > MAX_ANGLE) {
+    EEPROM.put(IN_ANGLE_ADDR, STEP_ANGLE_INTERNAL);
+    eeprom_busy_wait();
+    _delay_ms(10);
+  }
+
+  EEPROM.get(EX_ANGLE_ADDR, angleStepVal);
+  if (!angleStepVal || angleStepVal < 0 || angleStepVal > MAX_ANGLE) {
+    EEPROM.put(EX_ANGLE_ADDR, STEP_ANGLE_EXTERNAL);
+    eeprom_busy_wait();
+    _delay_ms(10);
+  }
 
   Motor::init();
 
@@ -68,6 +79,24 @@ void setup() {
   pDisplay->setTextSize(1);
   pDisplay->setTextColor(WHITE);
   startMenu(pDisplay, 0, false);
+}
+
+void selectAngle(float* _angle) {
+  pDisplay->clearDisplay();
+
+  pDisplay->setCursor(17, 5);
+  pDisplay->print(F("SETUP STEP ANGLE"));
+
+  pDisplay->setTextSize(2);
+  if (*_angle < 10)
+    pDisplay->setCursor(42, 28);
+  else
+    pDisplay->setCursor(30, 28);
+  pDisplay->print(*_angle);
+  pDisplay->drawRoundRect(18, 20, 92, 30, roundRectCorner, WHITE);
+  pDisplay->drawCircle(96, 28, 3, WHITE);
+  pDisplay->display();
+  pDisplay->setTextSize(1);
 }
 
 void loop() {
@@ -92,17 +121,57 @@ void loop() {
   } /* End of startMenu */
 
   startMenu(pDisplay, pos, true);
-  uint8_t id_driver = pos;
-  if (id_driver) {
-    pMotor = new Motor(STEP_PIN_EXTERNAL, DIR_PIN_EXTERNAL,
-                       ENBL_PIN_EXTERNAL, STEP_ANGLE_EXTERNAL);
-  } else if (!id_driver) {
-    pMotor = new Motor(STEP_PIN_INTERNAL, DIR_PIN_INTERNAL,
-                       ENBL_PIN_INTERNAL, STEP_ANGLE_INTERNAL);
+  uint8_t* id_driver = new uint8_t(pos);
+  float* angleStepVal = new float;
+
+  if (*id_driver) {
+    EEPROM.get(EX_ANGLE_ADDR, *angleStepVal);
+  } else {
+    EEPROM.get(IN_ANGLE_ADDR, *angleStepVal);
   }
-  _delay_ms(400);
+  _delay_ms(200);
+
+  selectAngle(angleStepVal);
+  while(true) {
+    encoder.tick();
+    right_btn.tick();
+    left_btn.tick();
+    reset_btn.tick();
+
+    if (encoder.left() || left_btn.press()) {
+      *angleStepVal += 0.1;
+      if (*angleStepVal > MAX_ANGLE) *angleStepVal = MAX_ANGLE;
+      selectAngle(angleStepVal);
+    }
+
+    if (encoder.right() || right_btn.press()) {
+      *angleStepVal -= 0.1;
+      if (*angleStepVal < 0) *angleStepVal = 0;
+      selectAngle(angleStepVal);
+    }
+
+    if (encoder.press() || reset_btn.press()) {
+      if (*id_driver) {
+        EEPROM.put(EX_ANGLE_ADDR, *angleStepVal);
+        eeprom_busy_wait();
+        _delay_ms(10);
+        pMotor = new Motor(STEP_PIN_EXTERNAL, DIR_PIN_EXTERNAL,
+                       ENBL_PIN_EXTERNAL, *angleStepVal);
+      } else {
+        EEPROM.put(IN_ANGLE_ADDR, *angleStepVal);
+        eeprom_busy_wait();
+        _delay_ms(10);
+        pMotor = new Motor(STEP_PIN_INTERNAL, DIR_PIN_INTERNAL,
+                       ENBL_PIN_INTERNAL, *angleStepVal);
+      }
+      break;
+    }
+  }
+  _delay_ms(200);
 
   mainScreen(pDisplay, pMotor, id_driver);
+  delete id_driver;
+  delete angleStepVal;
   pos = 0;
   bool screenState = false; // State vision of main screen
   Timer updateScreenRate(UPDATE_SCREEN_RATE);
