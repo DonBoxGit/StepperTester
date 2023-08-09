@@ -8,6 +8,12 @@
 #include "Motor.h"
 #include "timer_blink.h"
 
+/* Extern display's object pointer */
+extern Adafruit_SSD1306 *pDisplay;
+
+/* Extern motor's object pointer */
+extern Motor* pMotor;
+
 /* The increment coefficient of pulse */
 extern uint8_t coeff;
 
@@ -34,12 +40,13 @@ extern const char *sDriver[];
 extern const uint8_t driversArray;
 
 /* Menu function and screen draw */
-void startMenu(Adafruit_SSD1306 *display, uint8_t item, bool buttonState);
-void selectMenu(Adafruit_SSD1306 *display, uint8_t item, bool buttonState);
-void mainScreen(Adafruit_SSD1306 *display, Motor *motor, uint8_t *item);
-void velocityScreen(Adafruit_SSD1306 *display, Motor *motor);
-void setMicrostepMenu(Adafruit_SSD1306 *display, uint8_t item, bool buutonState);
-void computingCoeff(Motor *motor, uint8_t &incCoeff);
+void startMenu(uint8_t item, bool buttonState);
+void selectMenu(uint8_t item, bool buttonState);
+void mainScreen(uint8_t *item);
+void velocityScreen(void);
+void setAngle(int);
+void setMicrostepMenu(uint8_t item, bool buutonState);
+void computingCoeff(uint8_t &incCoeff);
 uint8_t calcCenter(uint8_t sLength);
 
 #endif /* _DEVICE_MENU_H_ */

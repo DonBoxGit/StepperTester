@@ -78,26 +78,7 @@ void setup() {
   pDisplay->begin(SSD1306_SWITCHCAPVCC, DISPLAY_I2C_ADDR);
   pDisplay->setTextSize(1);
   pDisplay->setTextColor(WHITE);
-  startMenu(pDisplay, 0, false);
-}
-
-void setAngle(int _angle) {
-  pDisplay->clearDisplay();
-
-  pDisplay->setCursor(17, 5);
-  pDisplay->print(F("SETUP STEP ANGLE"));
-
-  pDisplay->setTextSize(2);
-  if (_angle / 10 < 10)
-    pDisplay->setCursor(42, 28);
-  else
-    pDisplay->setCursor(30, 28);
-
-  pDisplay->print(static_cast<float>(_angle) / 10, 1);
-  //pDisplay->drawRoundRect(18, 21, 92, 30, roundRectCorner, WHITE);
-  pDisplay->drawCircle(86, 28, 3, WHITE);
-  pDisplay->display();
-  pDisplay->setTextSize(1);
+  startMenu(0, false);
 }
 
 void loop() {
@@ -110,18 +91,18 @@ void loop() {
 
     if (encoder.left() || left_btn.press()) {
       if(++pos > 1) pos = 0;
-      startMenu(pDisplay, pos, false);
+      startMenu(pos, false);
     }
     if (encoder.right() || right_btn.press()) {
       if(--pos < 0) pos = 1;
-      startMenu(pDisplay, pos, false);
+      startMenu(pos, false);
     }
     if (reset_btn.press()) {
       break;
     }
   } /* End of startMenu */
 
-  startMenu(pDisplay, pos, true);
+  startMenu(pos, true);
   uint8_t* id_driver = new uint8_t(pos);
   float* angleStepVal = new float;
 
@@ -170,7 +151,7 @@ void loop() {
   }
   _delay_ms(200);
 
-  mainScreen(pDisplay, pMotor, id_driver);
+  mainScreen(id_driver);
   delete id_driver;
   delete angleStepVal;
   pos = 0;
@@ -186,21 +167,21 @@ void loop() {
 
 #ifdef MICROSTEP_MODE_ENABLE
     if (encoder.press()) {
-      setMicrostepMenu(pDisplay, pos, false);
+      setMicrostepMenu(pos, false);
       while (true) {
         encoder.tick();
         if (encoder.left()) {
           if (++pos > 4) pos = 0;
-          setMicrostepMenu(pDisplay, pos, false);
+          setMicrostepMenu(pos, false);
         }
         if (encoder.right()) {
           if (--pos < 0) pos = 4;
-          setMicrostepMenu(pDisplay, pos, false);
+          setMicrostepMenu(pos, false);
         }
         if (encoder.press()) {
-          setMicrostepMenu(pDisplay, pos, true);
+          setMicrostepMenu(pos, true);
           _delay_ms(200);
-          mainScreen(pDisplay, pMotor, id_driver);
+          mainScreen(id_driver);
           break;
         }
       }
@@ -208,18 +189,18 @@ void loop() {
 #endif /* MICROSTEP_MODE_ENABLE */
 
     if (encoder.right()) {
-      computingCoeff(pMotor, coeff);
+      computingCoeff(coeff);
       pMotor->updatePulse(coeff);
-      mainScreen(pDisplay, pMotor, id_driver);
+      mainScreen(id_driver);
     }
 
     if (encoder.left()) {
-      computingCoeff(pMotor, coeff);
+      computingCoeff(coeff);
       if (pMotor->getPulse() > MIN_PULSE)
         pMotor->updatePulse(-coeff);
       else
         pMotor->updatePulse(0);
-      mainScreen(pDisplay, pMotor, id_driver);
+      mainScreen(id_driver);
     }
 
     if (right_togle.press()) {
@@ -232,7 +213,7 @@ void loop() {
         pMotor->setEnable(EnableState::OFF);
         screenState = false;
         blinkMotorStatus.resetStatus();
-        mainScreen(pDisplay, pMotor, id_driver);
+        mainScreen(id_driver);
     }
 
     if (left_togle.press()) {
@@ -245,7 +226,7 @@ void loop() {
         pMotor->setEnable(EnableState::OFF);
         screenState = false;
         blinkMotorStatus.resetStatus();
-        mainScreen(pDisplay, pMotor, id_driver);
+        mainScreen(id_driver);
     }
       
     if (!right_togle.state() && !left_togle.state()) {
@@ -266,7 +247,7 @@ void loop() {
 
     if (reset_btn.press()) {
       pMotor->resetSteps();
-      mainScreen(pDisplay, pMotor, id_driver);
+      mainScreen(id_driver);
     }
       
     if (term_sw_1.press() || term_sw_2.press()) {
@@ -274,11 +255,11 @@ void loop() {
       screenState  = true;
     } else if (term_sw_1.release() || term_sw_2.release()) {
       screenState = false;
-      mainScreen(pDisplay, pMotor, id_driver);
+      mainScreen(id_driver);
     }
 
     if (screenState && updateScreenRate.ready()) {
-      mainScreen(pDisplay, pMotor, id_driver);
+      mainScreen(id_driver);
     }
   }
 }
