@@ -81,20 +81,21 @@ void setup() {
   startMenu(pDisplay, 0, false);
 }
 
-void selectAngle(float* _angle) {
+void selectAngle(int _angle) {
   pDisplay->clearDisplay();
 
   pDisplay->setCursor(17, 5);
   pDisplay->print(F("SETUP STEP ANGLE"));
 
   pDisplay->setTextSize(2);
-  if (*_angle < 10)
+  if (_angle / 10 < 10)
     pDisplay->setCursor(42, 28);
   else
     pDisplay->setCursor(30, 28);
-  pDisplay->print(*_angle);
-  pDisplay->drawRoundRect(18, 20, 92, 30, roundRectCorner, WHITE);
-  pDisplay->drawCircle(96, 28, 3, WHITE);
+
+  pDisplay->print(static_cast<float>(_angle) / 10, 1);
+  //pDisplay->drawRoundRect(18, 21, 92, 30, roundRectCorner, WHITE);
+  pDisplay->drawCircle(86, 28, 3, WHITE);
   pDisplay->display();
   pDisplay->setTextSize(1);
 }
@@ -129,28 +130,28 @@ void loop() {
   } else {
     EEPROM.get(IN_ANGLE_ADDR, *angleStepVal);
   }
+  int iAngle =(int)(*angleStepVal * 10);
   _delay_ms(200);
 
-  selectAngle(angleStepVal);
-  while(true) {
+  selectAngle(iAngle);
+  while(true) {    
     encoder.tick();
     right_btn.tick();
     left_btn.tick();
     reset_btn.tick();
 
-    if (encoder.left() || left_btn.press()) {
-      *angleStepVal += 0.1;
-      if (*angleStepVal > MAX_ANGLE) *angleStepVal = MAX_ANGLE;
-      selectAngle(angleStepVal);
+    if (encoder.left() || right_btn.press()) {
+      if (++iAngle >= (MAX_ANGLE * 10)) iAngle = MAX_ANGLE * 10;
+      selectAngle(iAngle);
     }
 
-    if (encoder.right() || right_btn.press()) {
-      *angleStepVal -= 0.1;
-      if (*angleStepVal < 0) *angleStepVal = 0;
-      selectAngle(angleStepVal);
+    if (encoder.right() || left_btn.press()) {
+      if (--iAngle <= 0) iAngle = 0;
+      selectAngle(iAngle);
     }
 
     if (encoder.press() || reset_btn.press()) {
+      *angleStepVal = (float)(iAngle) / 10;
       if (*id_driver) {
         EEPROM.put(EX_ANGLE_ADDR, *angleStepVal);
         eeprom_busy_wait();
