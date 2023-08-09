@@ -81,7 +81,7 @@ void setup() {
   startMenu(pDisplay, 0, false);
 }
 
-void selectAngle(int _angle) {
+void setAngle(int _angle) {
   pDisplay->clearDisplay();
 
   pDisplay->setCursor(17, 5);
@@ -133,7 +133,7 @@ void loop() {
   int iAngle =(int)(*angleStepVal * 10);
   _delay_ms(200);
 
-  selectAngle(iAngle);
+  setAngle(iAngle);
   while(true) {    
     encoder.tick();
     right_btn.tick();
@@ -142,12 +142,12 @@ void loop() {
 
     if (encoder.left() || right_btn.press()) {
       if (++iAngle >= (MAX_ANGLE * 10)) iAngle = MAX_ANGLE * 10;
-      selectAngle(iAngle);
+      setAngle(iAngle);
     }
 
     if (encoder.right() || left_btn.press()) {
       if (--iAngle <= 0) iAngle = 0;
-      selectAngle(iAngle);
+      setAngle(iAngle);
     }
 
     if (encoder.press() || reset_btn.press()) {
