@@ -98,7 +98,7 @@ void Motor::initMicrostepMode() {
     /* Set whole step mode */
     far::digitalWrite(MS1, 0);
     far::digitalWrite(MS2, 0);
-    far::digitalWrite(MS2, 0);
+    far::digitalWrite(MS3, 0);
 }
 
 void Motor::setMicrostep(MicroStepMode mode) {
@@ -107,31 +107,31 @@ void Motor::setMicrostep(MicroStepMode mode) {
         case MicroStepMode::WHOLE_STEP:
             far::digitalWrite(MS1, 0);
             far::digitalWrite(MS2, 0);
-            far::digitalWrite(MS2, 0);
+            far::digitalWrite(MS3, 0);
             break;
         
         case MicroStepMode::HALF_STEP:
             far::digitalWrite(MS1, 1);
             far::digitalWrite(MS2, 0);
-            far::digitalWrite(MS2, 0);
+            far::digitalWrite(MS3, 0);
             break;
         
         case MicroStepMode::ONE_FOURTH_STEP:
             far::digitalWrite(MS1, 0);
             far::digitalWrite(MS2, 1);
-            far::digitalWrite(MS2, 0);
+            far::digitalWrite(MS3, 0);
             break;
 
         case MicroStepMode::ONE_EIGHTH_STEP:
             far::digitalWrite(MS1, 1);
             far::digitalWrite(MS2, 1);
-            far::digitalWrite(MS2, 0);
+            far::digitalWrite(MS3, 0);
             break;
 
         case MicroStepMode::ONE_SIXTEENTH_STEP:
             far::digitalWrite(MS1, 1);
             far::digitalWrite(MS2, 1);
-            far::digitalWrite(MS2, 1);
+            far::digitalWrite(MS3, 1);
             break;
     }
 }
