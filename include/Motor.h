@@ -67,17 +67,14 @@ class Motor {
         void resetSteps(void);
 
         /// @brief Get the Enable status of motor.
-        /// @param void
-        /// @return true - Enable ON, false - Enable OFF.
+        /// @return `true` - Enable ON, `false` - Enable OFF.
         bool getEnable(void);
 
         /// @brief Get the Motor status state.
-        /// @param void
         /// @return static_cast<uint8_t>(MotorState).
         uint8_t getMotorState(void);
 
         /// @brief Get the motor direction.
-        /// @param void
         /// @return true - forward, false - reverse.
         bool getDirection(void);
 
