@@ -104,7 +104,7 @@ void setMicrostepMenu(uint8_t item, bool buttonState) {
   pDisplay->display();
 }
 
-/* Menu for select driver stepper */
+/* Menu for select driver of stepper */
 const char *sMenu = "SELECT DRIVER";
 void startMenu(uint8_t item, bool buttonState) {
   pDisplay->clearDisplay();
@@ -238,8 +238,8 @@ void mainScreen(uint8_t *item) {
       if (pMotor->getDirection()) {
         if (blinkMotorStatus.getStatus()) {
           pDisplay->fillRoundRect(motorStatusCoordX, motorStatusCoordY,
-                                 rectStatusWidth, CHARACTER_HEIGHT,
-                                 roundRectCorner, WHITE);
+                                  rectStatusWidth, CHARACTER_HEIGHT,
+                                  roundRectCorner, WHITE);
           pDisplay->setTextColor(BLACK);
           pDisplay->setCursor(motorStatusCoordX + 3, motorStatusCoordY + 2);
           pDisplay->print("FORWARD");
@@ -247,8 +247,8 @@ void mainScreen(uint8_t *item) {
       } else {
         if (blinkMotorStatus.getStatus()) {
           pDisplay->fillRoundRect(motorStatusCoordX, motorStatusCoordY,
-                                 rectStatusWidth, CHARACTER_HEIGHT,
-                                 roundRectCorner, WHITE);
+                                  rectStatusWidth, CHARACTER_HEIGHT,
+                                  roundRectCorner, WHITE);
           pDisplay->setTextColor(BLACK);
           pDisplay->setCursor(motorStatusCoordX + 3, motorStatusCoordY + 2);
           pDisplay->print("REVERSE");
@@ -259,22 +259,22 @@ void mainScreen(uint8_t *item) {
     case static_cast<uint8_t>(MotorState::STOP):
       if (!far::digitalRead(TERM_SW_PIN_1)) {
         pDisplay->fillRoundRect(motorStatusCoordX, motorStatusCoordY,
-                               rectStatusWidth - 5, CHARACTER_HEIGHT,
-                               roundRectCorner, WHITE);
+                                rectStatusWidth - 5, CHARACTER_HEIGHT,
+                                roundRectCorner, WHITE);
         pDisplay->setTextColor(BLACK);
         pDisplay->setCursor(motorStatusCoordX + 3, motorStatusCoordY + 2);
         pDisplay->print("TERM-1");
       } else if (!far::digitalRead(TERM_SW_PIN_2)) {
         pDisplay->fillRoundRect(motorStatusCoordX, motorStatusCoordY,
-                               rectStatusWidth - 5, CHARACTER_HEIGHT,
-                               roundRectCorner, WHITE);
+                                rectStatusWidth - 5, CHARACTER_HEIGHT,
+                                roundRectCorner, WHITE);
         pDisplay->setTextColor(BLACK);
         pDisplay->setCursor(motorStatusCoordX + 3, motorStatusCoordY + 2);
         pDisplay->print("TERM-2");
       } else {
         pDisplay->fillRoundRect(motorStatusCoordX +4 , motorStatusCoordY,
-                               rectStatusWidth - 15, CHARACTER_HEIGHT,
-                               roundRectCorner, WHITE);
+                                rectStatusWidth - 15, CHARACTER_HEIGHT,
+                                roundRectCorner, WHITE);
         pDisplay->setTextColor(BLACK);
         pDisplay->setCursor(motorStatusCoordX + 8, motorStatusCoordY + 2);
         pDisplay->print("STOP");
@@ -283,8 +283,8 @@ void mainScreen(uint8_t *item) {
 
     case static_cast<uint8_t>(MotorState::STEP):
       pDisplay->fillRoundRect(motorStatusCoordX, motorStatusCoordY,
-                               rectStatusWidth, CHARACTER_HEIGHT,
-                               roundRectCorner, WHITE);
+                              rectStatusWidth, CHARACTER_HEIGHT,
+                              roundRectCorner, WHITE);
       pDisplay->setTextColor(BLACK);
       pDisplay->setCursor(motorStatusCoordX + 3, motorStatusCoordY + 2);
       if (!delayOneStepVision.ready()) {

@@ -3,10 +3,10 @@
 Motor::Motor (const uint8_t stp,
               const uint8_t dir,
               const uint8_t enb,
-              const float ang) : step_pin  (stp),
-                                 dir_pin   (dir),
-                                 enable_pin(enb),
-                                 angle     (ang) {
+              const float   ang) : step_pin  (stp),
+                                   dir_pin   (dir),
+                                   enable_pin(enb),
+                                   angle     (ang) {
     far::pinMode(step_pin,   OUTPUT);
     far::pinMode(dir_pin,    OUTPUT);
     far::pinMode(enable_pin, OUTPUT);
