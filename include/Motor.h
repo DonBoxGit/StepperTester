@@ -77,7 +77,7 @@ public:
 * @param state The state of motor from MotorState enumeration.
 * @note  `MotorState::WORK` - The motor is rotating,
 * @note  `MotorState::STOP` - The motor is stopped,
-* @note  `MotorState::STEP` - The motor have one-step mode.
+* @note  `MotorState::STEP` - The motor has one-step mode.
 ******************************************************************************/
 	void setMotorState(MotorState);
 
